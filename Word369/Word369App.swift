@@ -6,12 +6,20 @@
 //
 
 import SwiftUI
+import AppFeature
+import ComposableArchitecture
 
 @main
 struct Word369App: App {
+  let store: Store<AppState, AppAction> = Store(
+      initialState: .init(),
+      reducer: appReducer.debug(),
+      environment: .live
+  )
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          AppView(store: store)
         }
     }
 }
