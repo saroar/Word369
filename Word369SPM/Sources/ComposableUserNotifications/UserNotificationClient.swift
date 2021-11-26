@@ -30,6 +30,14 @@ public struct UserNotificationClient {
     }
   }
 
+  public struct Error: Swift.Error, Equatable {
+    public let error: NSError
+
+    public init(_ error: Swift.Error) {
+      self.error = error as NSError
+    }
+  }
+
   public struct Notification: Equatable {
     public var date: Date
     public var request: UNNotificationRequest

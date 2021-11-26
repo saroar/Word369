@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "HTTPRequestKit",
+        "repositoryURL": "https://github.com/AddaMeSPB/HTTPRequestKit.git",
+        "state": {
+          "branch": null,
+          "revision": "d2e387fe13eb3e9dd551f5530aa549284517e5c6",
+          "version": "3.0.0"
+        }
+      },
+      {
         "package": "swift-case-paths",
         "repositoryURL": "https://github.com/pointfreeco/swift-case-paths",
         "state": {
