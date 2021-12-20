@@ -17,9 +17,9 @@ struct Word369App: App {
       environment: .live
   )
 
-    var body: some Scene {
-        WindowGroup {
-          AppView(store: store)
-        }
-    }
+  var body: some Scene {
+      WindowGroup {
+        AppView(store: store)
+      }
+  }
 }

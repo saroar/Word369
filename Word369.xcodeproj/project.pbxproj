@@ -8,16 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		C335A11F274B801800FF9B07 /* Word369App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A11E274B801800FF9B07 /* Word369App.swift */; };
-		C335A121274B801800FF9B07 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A120274B801800FF9B07 /* ContentView.swift */; };
 		C335A123274B801E00FF9B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A122274B801E00FF9B07 /* Assets.xcassets */; };
 		C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A125274B801E00FF9B07 /* Preview Assets.xcassets */; };
 		C335A133274CE3DD00FF9B07 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = C335A132274CE3DD00FF9B07 /* AppFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		C335A11B274B801800FF9B07 /* Word369.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word369.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C335A11B274B801800FF9B07 /* Word300.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word300.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C335A11E274B801800FF9B07 /* Word369App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word369App.swift; sourceTree = "<group>"; };
-		C335A120274B801800FF9B07 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C335A122274B801E00FF9B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C335A125274B801E00FF9B07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -46,7 +44,7 @@
 		C335A11C274B801800FF9B07 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				C335A11B274B801800FF9B07 /* Word369.app */,
+				C335A11B274B801800FF9B07 /* Word300.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,7 +53,6 @@
 			isa = PBXGroup;
 			children = (
 				C335A11E274B801800FF9B07 /* Word369App.swift */,
-				C335A120274B801800FF9B07 /* ContentView.swift */,
 				C335A122274B801E00FF9B07 /* Assets.xcassets */,
 				C335A124274B801E00FF9B07 /* Preview Content */,
 			);
@@ -97,7 +94,7 @@
 				C335A132274CE3DD00FF9B07 /* AppFeature */,
 			);
 			productName = Word369;
-			productReference = C335A11B274B801800FF9B07 /* Word369.app */;
+			productReference = C335A11B274B801800FF9B07 /* Word300.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -150,7 +147,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C335A121274B801800FF9B07 /* ContentView.swift in Sources */,
 				C335A11F274B801800FF9B07 /* Word369App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -297,7 +293,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.addame.Word369;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Word300;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -327,7 +323,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.addame.Word369;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Word300;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
