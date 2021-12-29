@@ -12,19 +12,6 @@ import WordFeature
 import UserDefaultsClient
 import SharedModels
 
-extension WelcomeState {
-  func countryFlag(countryCode: String) -> String {
-    let base = 127397
-    var tempScalarView = String.UnicodeScalarView()
-    for i in countryCode.utf16 {
-      if let scalar = UnicodeScalar(base + Int(i)) {
-        tempScalarView.append(scalar)
-      }
-    }
-    return String(tempScalarView)
-  }
-}
-
 public enum WelcomeTag: Equatable {
   case l, a, b
 }
@@ -619,7 +606,7 @@ struct WelcomeViewL: View {
               Button {
                 viewStore.send(.currentSelectedLanguage(item))
               } label: {
-                Text("\(countryFlag(countryCode: item.code.uppercased())) \(item.nativeName.capitalized)")
+                Text(item.description)
               }
             }
         }, label: {
@@ -641,7 +628,7 @@ struct WelcomeViewL: View {
               Button {
                 viewStore.send(.learnSelectedLanguage(item))
               } label: {
-                Text("\(countryFlag(countryCode: item.code.uppercased())) \(item.nativeName.capitalized)")
+                Text(item.description)
               }
             }
 

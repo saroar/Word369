@@ -12,6 +12,7 @@ import WordFeature
 import WordClient
 import SharedModels
 import UserDefaultsClient
+import DayWordCardsFeature
 
 public enum AppState: Equatable {
   case welcome(WelcomeState)
@@ -19,7 +20,7 @@ public enum AppState: Equatable {
   public init() { self = .welcome(.init()) }
 }
 
-public enum AppAction: Equatable {
+public enum AppAction {
   case welcome(WelcomeAction)
   case word(WordAction)
   case userNotifications(UserNotificationClient.DelegateEvent)
@@ -83,14 +84,14 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
       return .none
 
     case .welcome(.moveToWordView):
-      state = .word(.init())
+      state = .word(.init(dayWordCardState: DayWordCardsState.init()))
       return .none
 
     case .welcome:
 
       if environment.userDefaultsClient
           .boolForKey(UserDefaultKeys.isWelcomeScreensFillUp.rawValue) == true {
-        state = .word(.init())
+        state = .word(.init(dayWordCardState: DayWordCardsState.init()))
         return .none
       }
 

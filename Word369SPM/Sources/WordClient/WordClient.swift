@@ -30,7 +30,7 @@ extension WordClient {
   public static var live = Self(
     words: {
       let builder: HTTPRequest = .build(
-        baseURL: URL(string: "https://5cd9-5-144-107-24.ngrok.io/api/words")!,
+        baseURL: URL(string: "http://localhost:7070/api/words")!,
         method: .get,
         authType: .none,
         path: "",

@@ -12,10 +12,11 @@ let package = Package(
         .library(name: "WordFeature", targets: ["WordFeature"]),
         .library(name: "SharedModels", targets: ["SharedModels"]),
         .library(name: "WordClient", targets: ["WordClient"]),
+        .library(name: "DayWordCardsFeature", targets: ["DayWordCardsFeature"]),
         .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
         .library(name: "ComposableUserNotifications", targets: ["ComposableUserNotifications"]),
     ],
-    
+
     dependencies: [
       .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.28.1"),
       .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
@@ -39,7 +40,15 @@ let package = Package(
             dependencies: [
               .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
               "ComposableUserNotifications", "SharedModels", "UserDefaultsClient",
-              "HTTPRequestKit", "WordClient"
+              "HTTPRequestKit", "WordClient", "DayWordCardsFeature"
+            ]
+        ),
+
+        .target(
+            name: "DayWordCardsFeature",
+            dependencies: [
+              .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+              "SharedModels"
             ]
         ),
 
