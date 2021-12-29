@@ -13,6 +13,7 @@ import SharedModels
 import HTTPRequestKit
 import WordClient
 import DayWordCardsFeature
+import DayWordCardFeature
 
 extension UserDefaults {
   // MARK: - Words
@@ -102,22 +103,36 @@ public let wordReducer = Reducer<
           return .none
         }
         
-        return Effect(value: WordAction.requestDayWords(responseWords))
-          .receive(on: environment.mainQueue)
-          .eraseToEffect()
+        return .concatenate(
+          Effect(value: WordAction.requestDayWords(responseWords))
+            .receive(on: environment.mainQueue)
+            .eraseToEffect(),
+          environment.userNotificationClient
+            .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
+            .fireAndForget()
+        )
       }
       
-      //    return .concatenate(
-      //      environment.userNotificationClient
-      //        .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
-      //        .fireAndForget()
-      //    )
+//      return .concatenate(
+//        Effect(value: WordAction.requestDayWords(responseWords))
+//          .receive(on: environment.mainQueue)
+//          .eraseToEffect(),
+//        environment.userNotificationClient
+//          .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
+//          .fireAndForget()
+//      )
       
-      return UserDefaultsDataProvider.wordsPublisher
-      //        .subscribe(on: DispatchQueue.global(qos: .userInitiated))
-        .receive(on: environment.mainQueue)
-        .catchToEffect()
-        .map(WordAction.receiveUserDefaultsWords)
+      
+      return .concatenate(
+        environment.userNotificationClient
+          .removePendingNotificationRequestsWithIdentifiers(["example_notification"])
+          .fireAndForget(),
+        
+        UserDefaultsDataProvider.wordsPublisher
+          .receive(on: environment.mainQueue)
+          .catchToEffect()
+          .map(WordAction.receiveUserDefaultsWords)
+      )
       
       
       //environment.userDefaultsClient.setData(encoded, UserDefaultKeys.wordBeginner.rawValue)

@@ -9,17 +9,17 @@ import SwiftUI
 import ComposableArchitecture
 import SharedModels
 
-struct DayWordCardView: View {
+public struct DayWordCardView: View {
 
   let store: Store<DayWordCardState, DayWordCardAction>
   @ObservedObject var viewStore: ViewStore<DayWordCardState, DayWordCardAction>
 
-  init(store: Store<DayWordCardState, DayWordCardAction>) {
+  public init(store: Store<DayWordCardState, DayWordCardAction>) {
     self.store = store
     self.viewStore = ViewStore(store)
   }
 
-  var body: some View {
+  public var body: some View {
     // 1
     GeometryReader { geometry in
       VStack(alignment: .leading) {

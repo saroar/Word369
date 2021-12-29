@@ -8,6 +8,7 @@
 import SwiftUI
 import SharedModels
 import ComposableArchitecture
+import DayWordCardFeature
 
 public struct DayWordCardsView: View {
 

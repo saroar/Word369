@@ -13,6 +13,7 @@ let package = Package(
         .library(name: "SharedModels", targets: ["SharedModels"]),
         .library(name: "WordClient", targets: ["WordClient"]),
         .library(name: "DayWordCardsFeature", targets: ["DayWordCardsFeature"]),
+        .library(name: "DayWordCardFeature", targets: ["DayWordCardFeature"]),
         .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
         .library(name: "ComposableUserNotifications", targets: ["ComposableUserNotifications"]),
     ],
@@ -48,8 +49,16 @@ let package = Package(
             name: "DayWordCardsFeature",
             dependencies: [
               .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-              "SharedModels"
+              "SharedModels", "DayWordCardFeature"
             ]
+        ),
+        
+        .target(
+          name: "DayWordCardFeature",
+          dependencies: [
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+            "SharedModels"
+          ]
         ),
 
         .target(name: "SharedModels"),

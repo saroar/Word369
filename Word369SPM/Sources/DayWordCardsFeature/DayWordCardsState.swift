@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import SharedModels
+import DayWordCardFeature
 
 public struct DayWordCardsState: Equatable {
   public init(

@@ -14,7 +14,7 @@ public struct DayWordCardEnvironment {
   public init() {}
 }
 
-let dayWordCardReducer = Reducer<DayWordCardState, DayWordCardAction, DayWordCardEnvironment> { state, action, environment in
+public let dayWordCardReducer = Reducer<DayWordCardState, DayWordCardAction, DayWordCardEnvironment> { state, action, environment in
   switch action {
   case let .onRemove(user):
     return .none
