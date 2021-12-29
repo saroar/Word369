@@ -92,12 +92,16 @@ public struct Word: Equatable, Identifiable, Codable {
   }
 }
 
-public struct DayWords: Codable, Equatable {
-  public init(id: Int, words: [Word] = []) {
-    self.id = id
+public struct DayWords: Codable, Equatable, Identifiable {
+  public var id: String {
+    return "\(dayNumber)"
+  }
+  
+  public var dayNumber: Int
+  public var words: [Word] = []
+  
+  public init(dayNumber: Int, words: [Word] = []) {
+    self.dayNumber = dayNumber
     self.words = words
   }
-
-  public var id: Int
-  public var words: [Word] = []
 }
