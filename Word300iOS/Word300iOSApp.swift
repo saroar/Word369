@@ -1,5 +1,5 @@
 //
-//  Word369App.swift
+//  Word300iOSApp.swift
 //  Word369
 //
 //  Created by Saroar Khandoker on 22.11.2021.
@@ -10,7 +10,7 @@ import AppFeature
 import ComposableArchitecture
 
 @main
-struct Word369App: App {
+struct Word300iOSApp: App {
   let store: Store<AppState, AppAction> = Store(
       initialState: .init(),
       reducer: appReducer.debug(),

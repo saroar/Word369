@@ -2,9 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Word369.xcodeproj">
+      location = "group:Word300iOS.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Word369SPM">
+      location = "group:Word300iOSSPM">
    </FileRef>
 </Workspace>

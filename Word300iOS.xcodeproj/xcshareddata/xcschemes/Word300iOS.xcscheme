@@ -16,8 +16,8 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C335A11A274B801800FF9B07"
                BuildableName = "Word300.app"
-               BlueprintName = "Word369"
-               ReferencedContainer = "container:Word369.xcodeproj">
+               BlueprintName = "Word300iOS"
+               ReferencedContainer = "container:Word300iOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,8 +46,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C335A11A274B801800FF9B07"
             BuildableName = "Word300.app"
-            BlueprintName = "Word369"
-            ReferencedContainer = "container:Word369.xcodeproj">
+            BlueprintName = "Word300iOS"
+            ReferencedContainer = "container:Word300iOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,8 +63,8 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C335A11A274B801800FF9B07"
             BuildableName = "Word300.app"
-            BlueprintName = "Word369"
-            ReferencedContainer = "container:Word369.xcodeproj">
+            BlueprintName = "Word300iOS"
+            ReferencedContainer = "container:Word300iOS.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

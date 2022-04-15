@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C335A11F274B801800FF9B07 /* Word369App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A11E274B801800FF9B07 /* Word369App.swift */; };
+		C335A11F274B801800FF9B07 /* Word300iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A11E274B801800FF9B07 /* Word300iOSApp.swift */; };
 		C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A125274B801E00FF9B07 /* Preview Assets.xcassets */; };
 		C335A133274CE3DD00FF9B07 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = C335A132274CE3DD00FF9B07 /* AppFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C335A11B274B801800FF9B07 /* Word300.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word300.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C335A11E274B801800FF9B07 /* Word369App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word369App.swift; sourceTree = "<group>"; };
+		C335A11E274B801800FF9B07 /* Word300iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word300iOSApp.swift; sourceTree = "<group>"; };
 		C335A125274B801E00FF9B07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -33,7 +33,7 @@
 		C335A112274B801800FF9B07 = {
 			isa = PBXGroup;
 			children = (
-				C335A11D274B801800FF9B07 /* Word369 */,
+				C335A11D274B801800FF9B07 /* Word300iOS */,
 				C335A11C274B801800FF9B07 /* Products */,
 				C335A131274CE3DD00FF9B07 /* Frameworks */,
 			);
@@ -47,13 +47,13 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		C335A11D274B801800FF9B07 /* Word369 */ = {
+		C335A11D274B801800FF9B07 /* Word300iOS */ = {
 			isa = PBXGroup;
 			children = (
-				C335A11E274B801800FF9B07 /* Word369App.swift */,
+				C335A11E274B801800FF9B07 /* Word300iOSApp.swift */,
 				C335A124274B801E00FF9B07 /* Preview Content */,
 			);
-			path = Word369;
+			path = Word300iOS;
 			sourceTree = "<group>";
 		};
 		C335A124274B801E00FF9B07 /* Preview Content */ = {
@@ -74,9 +74,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C335A11A274B801800FF9B07 /* Word369 */ = {
+		C335A11A274B801800FF9B07 /* Word300iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C335A129274B801E00FF9B07 /* Build configuration list for PBXNativeTarget "Word369" */;
+			buildConfigurationList = C335A129274B801E00FF9B07 /* Build configuration list for PBXNativeTarget "Word300iOS" */;
 			buildPhases = (
 				C335A117274B801800FF9B07 /* Sources */,
 				C335A118274B801800FF9B07 /* Frameworks */,
@@ -86,7 +86,7 @@
 			);
 			dependencies = (
 			);
-			name = Word369;
+			name = Word300iOS;
 			packageProductDependencies = (
 				C335A132274CE3DD00FF9B07 /* AppFeature */,
 			);
@@ -109,7 +109,7 @@
 					};
 				};
 			};
-			buildConfigurationList = C335A116274B801800FF9B07 /* Build configuration list for PBXProject "Word369" */;
+			buildConfigurationList = C335A116274B801800FF9B07 /* Build configuration list for PBXProject "Word300iOS" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -122,7 +122,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C335A11A274B801800FF9B07 /* Word369 */,
+				C335A11A274B801800FF9B07 /* Word300iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -143,7 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C335A11F274B801800FF9B07 /* Word369App.swift in Sources */,
+				C335A11F274B801800FF9B07 /* Word300iOSApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,7 +273,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Word369/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Word300iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 6989658CU5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -303,7 +303,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Word369/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Word300iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 6989658CU5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -329,7 +329,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C335A116274B801800FF9B07 /* Build configuration list for PBXProject "Word369" */ = {
+		C335A116274B801800FF9B07 /* Build configuration list for PBXProject "Word300iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C335A127274B801E00FF9B07 /* Debug */,
@@ -338,7 +338,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		C335A129274B801E00FF9B07 /* Build configuration list for PBXNativeTarget "Word369" */ = {
+		C335A129274B801E00FF9B07 /* Build configuration list for PBXNativeTarget "Word300iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				C335A12A274B801E00FF9B07 /* Debug */,
