@@ -41,6 +41,7 @@ extension WelcomeState {
   var view: WelcomeView.ViewState {
     get { .init(state: self) }
     set {
+      // should be only bindable action
       self.selectedPage = newValue.selectedPage
       self.startHour = newValue.startHour
       self.endHour = newValue.endHour
@@ -159,6 +160,8 @@ public let welcomeReducer = Reducer<
     state.currentLngCode = LanguageCode.list
       .filter { $0.code == Locale.current.regionCode?.lowercased() }
       .first ?? LanguageCode.bangla
+      
+    UserDefaults.currentLanguage = state.currentLngCode
 
     state.isBothLanguageEqual = state.currentLngCode == LanguageCode.english
     
@@ -180,6 +183,7 @@ public let welcomeReducer = Reducer<
     state.isNameValid = state.name.count >= 6
 
     state.isContinueButtonValid = !state.isNameValid
+    UserDefaults.username = state.name
     
     return environment.userDefaultsClient
       .setString(state.name, UserDefaultKeys.userName.rawValue)

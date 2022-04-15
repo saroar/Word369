@@ -15,12 +15,15 @@ import WordClient
 import Combine
 import DayWordCardsFeature
 import DayWordCardFeature
+import SettingsFeature
 
 public struct WordState: Equatable {
   
   public var words: IdentifiedArrayOf<Word> = []
   public var todayWords: IdentifiedArrayOf<Word> = []
   public var dayWordCardState: DayWordCardsState
+  public var settingsState: SettingsState?
+  public var isSettingsNavigationActive: Bool { self.settingsState != nil }
   public var dayWords: [DayWords] = []
   public var currentHour = Calendar.current.component(.hour, from: Date())
   public var currentDay: Int = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
@@ -29,6 +32,10 @@ public struct WordState: Equatable {
   public var currentDate = Date().get(.day, .month, .year)
   public var hourIndx = 0
   public var dateComponents = DateComponents()
+  public var isLoading = false
+    
+  public var from = UserDefaults.currentLanguage.name.lowercased()
+  public var to = UserDefaults.learnLanguage.name.lowercased()
   
   public init(
     words: IdentifiedArrayOf<Word> = [],
@@ -56,7 +63,8 @@ extension WordState {
       banglaDefinition: "每天吃一个苹果让医生远离",
       
       isReadFromNotification: false,
-      isReadFromView: false
+      isReadFromView: false,
+      user: .demo
     ),
     
       .init(
@@ -70,7 +78,8 @@ extension WordState {
         banglaDefinition: "每天吃一个苹果让医生远离",
         
         isReadFromNotification: false,
-        isReadFromView: false
+        isReadFromView: false,
+        user: .demo
       ),
     
       .init(
@@ -84,7 +93,8 @@ extension WordState {
         banglaDefinition: "每天吃一个苹果让医生远离",
         
         isReadFromNotification: false,
-        isReadFromView: false
+        isReadFromView: false,
+        user: .demo
       ),
     
       .init(
@@ -98,7 +108,8 @@ extension WordState {
         banglaDefinition: "每天吃一个苹果让医生远离",
         
         isReadFromNotification: false,
-        isReadFromView: false
+        isReadFromView: false,
+        user: .demo
       ),
     
       .init(
@@ -112,7 +123,8 @@ extension WordState {
         banglaDefinition: "每天吃一个苹果让医生远离",
         
         isReadFromNotification: false,
-        isReadFromView: false
+        isReadFromView: false,
+        user: .demo
       ),
     
       .init(
@@ -126,7 +138,8 @@ extension WordState {
         banglaDefinition: "每天吃一个苹果让医生远离",
         
         isReadFromNotification: false,
-        isReadFromView: false
+        isReadFromView: false,
+        user: .demo
       ),
     
       .init(
@@ -140,7 +153,8 @@ extension WordState {
         banglaDefinition: "每天吃一个苹果让医生远离",
         
         isReadFromNotification: false,
-        isReadFromView: false
+        isReadFromView: false,
+        user: .demo
       )
   ]
   
@@ -156,14 +170,15 @@ extension WordState {
       banglaDefinition: "每天吃一个苹果让医生远离",
       
       isReadFromNotification: false,
-      isReadFromView: false
+      isReadFromView: false,
+      user: .demo
     )
   ]
   )
   static public var mock: WordState = .init(
     words: wordsMock,
     dayWordCardState: DayWordCardsState(
-      dayWordCardStates: .init(uniqueElements: [.init(word: Word(englishWord: "Apple", englishDefinition: "Apple Def"))])
+      dayWordCardStates: .init(uniqueElements: [.init(id: 0, word: Word(englishWord: "Apple", englishDefinition: "Apple Def", user: .demo))])
     ),
     dayWords: [dayWordsMock]
   )
@@ -190,7 +205,7 @@ extension WordState {
     
     for word in words {
       let fromDayStartHourToEndHours = (startNextHourFromCurrent...endHour)
-      print(fromDayStartHourToEndHours.map { $0} )
+      debugPrint(fromDayStartHourToEndHours.map { $0} )
       if hourIndex == fromDayStartHourToEndHours.count {
         hourIndex = 0
         // when 1st day is finished
@@ -212,7 +227,13 @@ extension WordState {
     
     if let row = dayWords.firstIndex(where: { $0.dayNumber == self.currentDay }) {
       self.todayWords = .init(uniqueElements: dayWords[row].words)
-      let cardState: IdentifiedArrayOf<DayWordCardState> = .init(uniqueElements: dayWords[row].words.map { DayWordCardState.init(word: $0) })
+      let cardState: IdentifiedArrayOf<DayWordCardState> = .init(
+        uniqueElements: dayWords[row].words
+          .enumerated()
+          .map { idx, word in
+            DayWordCardState.init(id: idx, word: word)
+        }
+      )
       self.dayWordCardState = .init(dayWordCardStates: cardState )
     }
     
@@ -247,7 +268,7 @@ extension WordState {
     var currentHourNext = currentHour + 1
     var requests: [UNNotificationRequest] = []
     
-    print(#line, "Start", requests.count)
+    debugPrint(#line, "Start", requests.count)
     
     for word in words {
       
@@ -264,8 +285,8 @@ extension WordState {
       
       dateComponents.hour = fromDayStartHourToEndHours[hourIndex]
       let content = UNMutableNotificationContent()
-      content.title = word.englishWord
-      content.body = word.englishDefinition
+      content.title = word.buildNotificationTitle(from: from, to: to)
+      content.body = word.buildNotificationDefinition(from: from, to: to)
       content.categoryIdentifier = "com.addame.words300"
       content.sound = UNNotificationSound.default
       
@@ -275,12 +296,51 @@ extension WordState {
       hourIndex += 1
       
       requests.append(request)
-      
     }
     
-    print(#line, "End", requests.count)
+      scheduleNotification()
+    debugPrint(#line, "End", requests.count)
     return requests
   }
+    
+    func scheduleNotification() {
+        
+        
+        
+        let center = UNUserNotificationCenter.current()
+        center.removeAllDeliveredNotifications()
+        center.removeAllPendingNotificationRequests()
+
+        let content = UNMutableNotificationContent()
+        content.title = "Late wake up call"
+        content.subtitle = "subtitle, subtitle, subtitle"
+        content.body = "The early bird catches the worm, but the second mouse gets the cheese."
+        content.categoryIdentifier = "alarm"
+        content.userInfo = ["customData": "fizzbuzz"]
+        content.sound = UNNotificationSound.default
+
+        var dateComponents = DateComponents()
+        dateComponents.hour = 09
+        dateComponents.minute = 50
+//        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+//
+//        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        
+        let trigger = UNTimeIntervalNotificationTrigger(
+                    timeInterval: 60.0,
+                    repeats: true)
+        let request = UNNotificationRequest(
+            identifier: UUID().uuidString,
+                    content: content,
+                    trigger: trigger
+                )
+        
+        center.add(request) { error in
+            if let error = error {
+              print(error)
+            }
+          }
+    }
   
   mutating func buildNotifications(words: [Word]) -> Effect<[UNNotificationRequest], Never> {
     Effect(value: self.buildNotificationRequests(words: words))
@@ -303,9 +363,8 @@ extension WordState {
   mutating func addNotificationsActionEffectResult(
     words: [Word],
     environment: WordEnvironment) -> Effect<WordAction, Never> {
-      
+      debugPrint(#line, "concatenate 2st")
       return self.addNotifications(words: words, environment: environment)
         .fireAndForget()
-      
     }
 }

@@ -14,7 +14,7 @@ public struct DayWordCardsState: Equatable {
   public init(
     dayWordCardStates: IdentifiedArrayOf<DayWordCardState> = [],
     getCardOffset: CGFloat = .zero,
-    getCardWidth: CGFloat = CGFloat(300),
+    getCardWidth: CGFloat = CGFloat(UIScreen.main.bounds.width),
     increaseID: Int = 0, translation: CGSize = .zero
   ) {
     self.dayWordCardStates = dayWordCardStates

@@ -85,6 +85,7 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
 
     case .welcome(.moveToWordView):
       state = .word(.init(dayWordCardState: DayWordCardsState.init()))
+      
       return .none
 
     case .welcome:
@@ -100,11 +101,11 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
       return .none
     case let .scenePhase(phase):
       switch phase {
-      case .background: print(#line, "background")
+      case .background: debugPrint(#line, "background")
         return .none
-      case .inactive: print(#line, "inactive")
+      case .inactive: debugPrint(#line, "inactive")
         return .none
-      case .active: print(#line, "active")
+      case .active: debugPrint(#line, "active")
 
         return .merge(
           // Set notifications delegate
@@ -124,7 +125,7 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
             .fireAndForget()
           )
       @unknown default:
-        print(#line, "default")
+        debugPrint(#line, "default")
         return .none
       }
 
@@ -156,6 +157,7 @@ public struct AppView: View {
           CaseLet(state: /AppState.word, action: AppAction.word) { store in
             NavigationView {
               WordView(store: store)
+                .navigationTitle("Your words")
             }
             .stackNavigationViewStyle()
           }

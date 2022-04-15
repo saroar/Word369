@@ -11,26 +11,26 @@ import Combine
 import SharedModels
 
 public struct WordClient {
-  public typealias WordFetchHandler = () -> AnyPublisher<[Word], HTTPRequest.HRError>
-  public typealias WordCreateHandler = (Word) -> AnyPublisher<Word, HTTPRequest.HRError>
+    public typealias WordFetchHandler = (_ from: String, _ to: String) -> AnyPublisher<[Word], HTTPRequest.HRError>
+    public typealias WordCreateHandler = (Word) -> AnyPublisher<Word, HTTPRequest.HRError>
 
-  public let words: WordFetchHandler
-  public let create: WordCreateHandler
+    public let words: WordFetchHandler
+    public let create: WordCreateHandler
 
-  public init(
-    words: @escaping WordFetchHandler,
-    create: @escaping WordCreateHandler
-  ) {
-    self.words = words
-    self.create = create
-  }
+    public init(
+        words: @escaping WordFetchHandler,
+        create: @escaping WordCreateHandler
+    ) {
+        self.words = words
+        self.create = create
+    }
 }
 
 extension WordClient {
   public static var live = Self(
-    words: {
+    words: { from, to in
       let builder: HTTPRequest = .build(
-        baseURL: URL(string: "http://localhost:7070/api/words")!,
+        baseURL: URL(string: "https://word.justcal.me/api/words/language?fromLanguage=\(from)&toLanguage=\(to)")!,
         method: .get,
         authType: .none,
         path: "",
@@ -68,13 +68,13 @@ extension WordClient {
 
 extension WordClient {
   public static let empty = Self(
-    words: {
-      Just([Word(englishWord: "", englishDefinition: "")])
+    words: { from, to in 
+        Just([Word(englishWord: "", englishDefinition: "", user: .demo)])
         .setFailureType(to: HTTPRequest.HRError.self)
         .eraseToAnyPublisher()
     },
     create: { _ in
-      Just(Word(englishWord: "", englishDefinition: ""))
+        Just(Word(englishWord: "", englishDefinition: "", user: .demo))
         .setFailureType(to: HTTPRequest.HRError.self)
         .eraseToAnyPublisher()
     }

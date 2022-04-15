@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		C335A11F274B801800FF9B07 /* Word369App.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A11E274B801800FF9B07 /* Word369App.swift */; };
-		C335A123274B801E00FF9B07 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A122274B801E00FF9B07 /* Assets.xcassets */; };
 		C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A125274B801E00FF9B07 /* Preview Assets.xcassets */; };
 		C335A133274CE3DD00FF9B07 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = C335A132274CE3DD00FF9B07 /* AppFeature */; };
 /* End PBXBuildFile section */
@@ -16,7 +15,6 @@
 /* Begin PBXFileReference section */
 		C335A11B274B801800FF9B07 /* Word300.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word300.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C335A11E274B801800FF9B07 /* Word369App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word369App.swift; sourceTree = "<group>"; };
-		C335A122274B801E00FF9B07 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C335A125274B801E00FF9B07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,7 +51,6 @@
 			isa = PBXGroup;
 			children = (
 				C335A11E274B801800FF9B07 /* Word369App.swift */,
-				C335A122274B801E00FF9B07 /* Assets.xcassets */,
 				C335A124274B801E00FF9B07 /* Preview Content */,
 			);
 			path = Word369;
@@ -136,7 +133,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */,
-				C335A123274B801E00FF9B07 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,7 +201,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -260,7 +256,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -292,7 +288,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.addame.Word369;
+				PRODUCT_BUNDLE_IDENTIFIER = com.addame.Word300;
 				PRODUCT_NAME = Word300;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -322,7 +318,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.addame.Word369;
+				PRODUCT_BUNDLE_IDENTIFIER = com.addame.Word300;
 				PRODUCT_NAME = Word300;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

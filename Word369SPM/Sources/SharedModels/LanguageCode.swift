@@ -31,7 +31,9 @@ public struct LanguageCode: Codable, Hashable, Equatable {
 extension LanguageCode {
   public static let bangla: LanguageCode = .init(name: "Bengali", nativeName: "বাংলা", code: "bd")
   public static let english: LanguageCode = .init(name: "English", nativeName: "English", code: "us")
-  
+    
+    public static let empty: LanguageCode = .init(name: "", nativeName: "", code: "")
+    
   public static let list: [LanguageCode] = [
     .init(name: "Bengali", nativeName: "বাংলা", code: "bd"),
     .init(name: "Russian", nativeName: "русский язык", code: "ru"),

@@ -23,35 +23,44 @@ public struct DayWordCardView: View {
     // 1
     GeometryReader { geometry in
       VStack(alignment: .leading) {
-        Text("\(viewStore.word.englishWord)")
-          .font(.title)
-          .bold()
-          .padding()
-
-        // 5
-        Image(systemName: "person")
-          .resizable()
-          .aspectRatio(contentMode: .fit)
-          .padding()
-          .frame(width: geometry.size.width, height: geometry.size.height * 0.75)
-          .clipped()
-
-
-        HStack {
+          
+          Text("\(viewStore.word.englishTitle)")
+              .font(.title).bold()
+              .padding([.top, .leading, .trailing], 16)
+          Text("\(viewStore.word.englishDefinition)")
+              .font(.body)
+              .padding([.bottom, .leading, .trailing], 16)
+        Divider()
           // 5
-          VStack(alignment: .leading, spacing: 6) {
-
-            Text(viewStore.word.russianWord ?? "ops")
-              .font(.subheadline)
-              .bold()
-
-          }
+          // Image(systemName: "person")
+          //   .resizable()
+          //   .aspectRatio(contentMode: .fit)
+          //   .padding()
+          //   .frame(width: geometry.size.width, height: geometry.size.height * 0.75)
+          //   .clipped()
+        
+          Text("\(viewStore.word.russianTitle ?? "")")
+              .font(.title).bold()
+              .padding([.top, .leading, .trailing], 16)
+          Text("\(viewStore.word.russianDefinition ?? "")")
+             .font(.body)
+             .padding([.bottom, .leading, .trailing], 16)
           Spacer()
-
-          Image(systemName: "info.circle")
-            .foregroundColor(.gray)
-        }
-        .padding(.horizontal)
+//        HStack {
+//          // 5
+//          VStack(alignment: .leading, spacing: 6) {
+//
+//            Text("")
+//              .font(.subheadline)
+//              .bold()
+//
+//          }
+//          Spacer()
+//
+//          Image(systemName: "info.circle")
+//            .foregroundColor(.gray)
+//        }
+//        .padding(.horizontal)
       }
       .padding(.bottom)
       .background(Color.white)

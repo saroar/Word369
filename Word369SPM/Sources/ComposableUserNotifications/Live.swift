@@ -74,6 +74,7 @@ extension UserNotificationClient.Notification.Response {
 
 extension UserNotificationClient.Notification.Settings {
   public init(rawValue: UNNotificationSettings) {
+    self.settings = rawValue
     self.authorizationStatus = rawValue.authorizationStatus
   }
 }

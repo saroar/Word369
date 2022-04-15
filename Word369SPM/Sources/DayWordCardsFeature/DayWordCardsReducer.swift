@@ -11,7 +11,13 @@ import ComposableArchitecture
 import DayWordCardFeature
 
 public struct DayWordCardsEnvironment {
-  public init() {}
+  public var mainQueue: AnySchedulerOf<DispatchQueue>
+  
+  public init(
+    mainQueue: AnySchedulerOf<DispatchQueue>
+  ) {
+    self.mainQueue = mainQueue
+  }
 }
 
 public let dayWordCardsReducer = Reducer<DayWordCardsState, DayWordCardsAction, DayWordCardsEnvironment>.combine(
@@ -26,31 +32,6 @@ public let dayWordCardsReducer = Reducer<DayWordCardsState, DayWordCardsAction, 
     case .onAppear:
       return .none
 
-    case let .getCardOffsetAndWidth(geometry):
-      state.increaseID += 1
-
-      let offset = CGFloat(state.dayWordCardStates.count - 1 - state.increaseID) * 10
-
-      return .merge(
-        Effect(value: DayWordCardsAction.getCardWidth(geometry.size.width, offset))
-          .receive(on: DispatchQueue.main)
-          .eraseToEffect(),
-
-        Effect(value: DayWordCardsAction.getCardOffset(offset))
-          .receive(on: DispatchQueue.main)
-          .eraseToEffect()
-      )
-
-    case let .getCardWidth(width, offset):
-      state.getCardWidth = width - offset
-      print(#line, state.getCardWidth, state.increaseID)
-
-      return .none
-    case let .getCardOffset(offset):
-      state.getCardOffset = offset
-      print(#line, state.getCardOffset, state.increaseID)
-
-      return .none
     case let .word(id: id, action: action):
       switch action {
       case let .onChanged(value): return .none
@@ -61,4 +42,5 @@ public let dayWordCardsReducer = Reducer<DayWordCardsState, DayWordCardsAction, 
       }
 
     }
-  })
+  }
+)

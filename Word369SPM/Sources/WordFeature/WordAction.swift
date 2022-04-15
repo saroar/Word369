@@ -14,6 +14,7 @@ import HTTPRequestKit
 import WordClient
 import Combine
 import DayWordCardsFeature
+import SettingsFeature
 
 public enum WordAction {
   case onApper
@@ -28,5 +29,7 @@ public enum WordAction {
   case userNotifications(UserNotificationClient.DelegateEvent)
   
   case dayWords(DayWordCardsAction)
+  case settings(SettingsAction)
+  case settingsView(isNavigate: Bool)
   
 }

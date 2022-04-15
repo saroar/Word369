@@ -21,7 +21,7 @@ public let dayWordCardReducer = Reducer<DayWordCardState, DayWordCardAction, Day
 
   case let .onChanged(cgSize):
     state.translation = cgSize
-    print(state.translation.width, state.translation.width)
+    debugPrint(state.translation.width, state.translation.width)
     return .none
 
   case let .getGesturePercentage(geometry, gesture):

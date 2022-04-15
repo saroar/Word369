@@ -61,9 +61,11 @@ public struct UserNotificationClient {
     // TODO: should this be nested in UserNotificationClient instead of Notification?
     public struct Settings: Equatable {
       public var authorizationStatus: UNAuthorizationStatus
+      public var settings: UNNotificationSettings
 
-      public init(authorizationStatus: UNAuthorizationStatus) {
-        self.authorizationStatus = authorizationStatus
+      public init(settings: UNNotificationSettings, authorizationStatus: UNAuthorizationStatus) {
+          self.settings = settings
+          self.authorizationStatus = authorizationStatus
       }
     }
   }

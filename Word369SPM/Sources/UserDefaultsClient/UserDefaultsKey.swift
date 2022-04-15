@@ -10,7 +10,7 @@ import Foundation
 public enum UserDefaultKeys: String, CaseIterable {
   case userName, isFristTimeLunch, isWelcomeScreensFillUp, startHour, endHour,
 
-  currentLanguage, learnLanguage,
+  currentLanguage, learnLanguage, wordLevel,
   wordBeginner, wordIntermediate, wordAdvanced,
   dayWordsBeginner, dayWordsIntermediate, dayWordsAdvanced
 }

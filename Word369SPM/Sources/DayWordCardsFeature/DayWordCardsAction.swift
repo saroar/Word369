@@ -12,8 +12,5 @@ import DayWordCardFeature
 
 public enum DayWordCardsAction {
   case onAppear
-  case word(id: Word.ID, action: DayWordCardAction)
-  case getCardOffsetAndWidth(_ geometry: GeometryProxy)
-  case getCardWidth(_ width: CGFloat, _ offset: CGFloat)
-  case getCardOffset( _ offset: CGFloat)
+  case word(id: Int, action: DayWordCardAction)
 }
