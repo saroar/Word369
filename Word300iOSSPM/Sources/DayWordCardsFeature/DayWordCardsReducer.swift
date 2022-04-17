@@ -9,6 +9,13 @@ import SwiftUI
 import SharedModels
 import ComposableArchitecture
 import DayWordCardFeature
+import UserDefaultsClient
+
+extension UserDefaults {
+    // MARK: - DayWords
+    @UserDefaultPublished(UserDefaultKeys.dayWordsBeginner.rawValue, defaultValue: [])
+    public static var dayWords: [DayWords]
+}
 
 public struct DayWordCardsEnvironment {
   public var mainQueue: AnySchedulerOf<DispatchQueue>
@@ -37,6 +44,11 @@ public let dayWordCardsReducer = Reducer<DayWordCardsState, DayWordCardsAction, 
       case let .onChanged(value): return .none
       case let .onRemove(word):
         state.dayWordCardStates.removeAll(where: { $0.word == word })
+          let currentDay: Int = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
+          
+          if let row = UserDefaults.dayWords.firstIndex(where: { $0.dayNumber == currentDay }) {
+              UserDefaults.dayWords[row].words.removeAll(where: { $0 == word })
+          }
         return .none
       case .getGesturePercentage(_, _): return .none
       }
