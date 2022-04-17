@@ -155,10 +155,7 @@ public struct Word: Equatable, Identifiable, Codable {
 }
 
 public struct DayWords: Codable, Equatable, Identifiable {
-    public var id: String {
-        return "\(dayNumber)"
-    }
-    
+    public var id: String { return "\(dayNumber)" }
     public var dayNumber: Int
     public var words: [Word] = []
     

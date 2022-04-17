@@ -50,7 +50,7 @@ let package = Package(
             name: "DayWordCardsFeature",
             dependencies: [
               .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-              "SharedModels", "DayWordCardFeature"
+              "SharedModels", "DayWordCardFeature", "UserDefaultsClient"
             ]
         ),
         

@@ -114,7 +114,8 @@ public struct SettingsView: View {
       } label: {
           Image(systemName: "bell")
               .font(.title)
-              .accentColor(.red)
+              .background(Color.red)
+          
           Text("Notification Settings")
       }
       .padding()

@@ -81,7 +81,7 @@ public let wordReducer = Reducer<
     switch action {
     case .onApper:
         
-        state.isLoading = true      
+      state.isLoading = true      
       state.startHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.startHour.rawValue)
       state.endHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.endHour.rawValue)
       
@@ -113,11 +113,7 @@ public let wordReducer = Reducer<
             .map(WordAction.wordResponse)
       
     case let .wordResponse(.success(responseWords)):
-        // 1st time we get words we create notification
-        // 2nd time we get we compair from last words == localWords
-        // if equal then nothing to do
-        // else we should update local words and notification
-        
+ 
       let dayWords = UserDefaults.dayWords
       let nestedWords = dayWords
         .map { $0.words }

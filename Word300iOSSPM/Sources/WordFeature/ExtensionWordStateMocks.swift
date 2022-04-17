@@ -10,12 +10,7 @@ import ComposableArchitecture
 import UserDefaultsClient
 import ComposableUserNotifications
 import SharedModels
-import HTTPRequestKit
-import WordClient
-import Combine
 import DayWordCardsFeature
-import DayWordCardFeature
-import SettingsFeature
 
 extension WordState {
   static public var wordsMock: IdentifiedArrayOf<Word> = [
@@ -140,8 +135,8 @@ extension WordState {
       isReadFromView: false,
       user: .demo
     )
-  ]
-  )
+  ])
+    
   static public var mock: WordState = .init(
     words: wordsMock,
     dayWordCardState: DayWordCardsState(

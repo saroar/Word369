@@ -57,12 +57,11 @@ extension AppEnvironment {
   )
 
   static public var mock: AppEnvironment = .init(
-    userNotificationClient: .failing,
+    userNotificationClient: .noop,
     userDefaultsClient: .noop,
     mainQueue: .immediate,
     backgroundQueue: .immediate
   )
-
 }
 
 public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(

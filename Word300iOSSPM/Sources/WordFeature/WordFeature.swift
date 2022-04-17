@@ -40,10 +40,8 @@ public struct WordView: View {
         
         WithViewStore(self.store.scope(state: ViewState.init)) { viewStore in
             VStack {
-                if viewStore.isLoading {
-                    ProgressView()
-                }
-                
+                if viewStore.isLoading { ProgressView() }
+
                 DayWordCardsView(
                     store: self.store.scope(
                         state: \.dayWordCardState,

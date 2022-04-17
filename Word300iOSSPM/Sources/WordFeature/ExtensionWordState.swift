@@ -12,63 +12,73 @@ import UserNotifications
 
 extension WordState {
     
-  mutating func buildDayWords(words: [Word]) -> [DayWords] {
-    
-    dayWords.append(DayWords(dayNumber: self.currentDay))
-    
-    var hourIndex = self.hourIndx
-    var currentHour = self.currentHour
-    let startHour = self.startHour
-    let endHour = self.endHour
-    var currentDay = self.currentDay
-    
-    var startNextHourFromCurrent = currentHour + 1
-    
-    /// if current hour bigther or eqal
-    if currentHour >= endHour {
-      currentDay += 1
-      currentHour = startHour
-    }
-    
-    for word in words {
-      let fromDayStartHourToEndHours = (startNextHourFromCurrent...endHour)
-      debugPrint(fromDayStartHourToEndHours.map { $0} )
-      if hourIndex == fromDayStartHourToEndHours.count {
-        hourIndex = 0
-        // when 1st day is finished
-        // start 2nd dayHours from 0 -> how i can start 2nd day here
-        startNextHourFromCurrent = startHour - 1 // set start hour from currentNextHour
-        
-        currentDay += 1
-      }
-      
-      if let row = dayWords.firstIndex(where: { $0.dayNumber == currentDay }) {
-        dayWords[row].words.append(Word(word))
-      } else {
-        dayWords.append(DayWords(dayNumber: currentDay, words: [Word(word)]))
-      }
-      
-        print(#line, "currentDayF \(currentDay)")
-      if currentDay == 369 {
-         currentDay = 1
-      }
-      hourIndex += 1
-      
-    }
-    
-    if let row = dayWords.firstIndex(where: { $0.dayNumber == self.currentDay }) {
-      self.todayWords = .init(uniqueElements: dayWords[row].words)
-      let cardState: IdentifiedArrayOf<DayWordCardState> = .init(
-        uniqueElements: dayWords[row].words
-          .enumerated()
-          .map { idx, word in
-            DayWordCardState.init(id: idx, word: word)
+    mutating fileprivate func buildTodayWordsAndDayWordCardStates(_ dayWords: [DayWords]) {
+        if let row = dayWords.firstIndex(where: { $0.dayNumber == self.currentDay }) {
+            todayWords = .init(uniqueElements: dayWords[row].words)
+            let cardState: IdentifiedArrayOf<DayWordCardState> = .init(
+                uniqueElements: todayWords
+                    .enumerated()
+                    .map { idx, word in
+                        DayWordCardState.init(id: idx, word: word)
+                    }
+            )
+            self.dayWordCardState = .init(dayWordCardStates: cardState )
         }
-      )
-      self.dayWordCardState = .init(dayWordCardStates: cardState )
     }
     
-    UserDefaults.dayWords = dayWords
+    mutating func buildDayWords(words: [Word]) -> [DayWords] {
+    
+        dayWords.append(DayWords(dayNumber: self.currentDay))
+        
+        var hourIndex = self.hourIndx
+        var currentHour = self.currentHour
+        let startHour = self.startHour
+        let endHour = self.endHour
+        var currentDay = self.currentDay
+        
+        var startNextHourFromCurrent = currentHour + 1
+        
+        /// if current hour bigther or eqal
+        if currentHour >= endHour {
+          currentDay += 1
+          currentHour = startHour
+        }
+      
+      if UserDefaults.words == words {
+          dayWords = UserDefaults.dayWords
+          buildTodayWordsAndDayWordCardStates(dayWords)
+      } else {
+          for word in words {
+  
+            let fromDayStartHourToEndHours = (startNextHourFromCurrent...endHour)
+  
+            if hourIndex == fromDayStartHourToEndHours.count {
+              hourIndex = 0
+              // when 1st day is finished
+              // start 2nd dayHours from 0 -> how i can start 2nd day here
+              startNextHourFromCurrent = startHour - 1 // set start hour from currentNextHour
+              
+              currentDay += 1
+            }
+            
+            if let row = dayWords.firstIndex(where: { $0.dayNumber == currentDay }) {
+              dayWords[row].words.append(Word(word))
+            } else {
+              dayWords.append(DayWords(dayNumber: currentDay, words: [Word(word)]))
+            }
+            
+            if currentDay >= 365 {
+               currentDay = 1
+            }
+            hourIndex += 1
+            
+          }
+          UserDefaults.dayWords = dayWords
+          buildTodayWordsAndDayWordCardStates(dayWords)
+      }
+
+
+    
     return dayWords
   }
   
