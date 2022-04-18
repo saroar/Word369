@@ -157,14 +157,15 @@ public let welcomeReducer = Reducer<
     
   case .onApper:
     
-    state.currentLngCode = LanguageCode.list
-      .filter { $0.code == Locale.current.regionCode?.lowercased() }
-      .first ?? LanguageCode.bangla
-      
-    UserDefaults.currentLanguage = state.currentLngCode
+      if UserDefaults.currentLanguage.name.isEmpty {
+        state.currentLngCode = LanguageCode.list
+          .filter { $0.code == Locale.current.regionCode?.lowercased() }
+          .first ?? LanguageCode.bangla
+      } else {
+        state.currentLngCode = UserDefaults.currentLanguage
+      }
 
     state.isBothLanguageEqual = state.currentLngCode == LanguageCode.english
-    
     state.isContinueButtonValid = state.isBothLanguageEqual
     
     return .merge(

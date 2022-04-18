@@ -12,7 +12,7 @@ import UserNotifications
 
 extension WordState {
     
-    mutating fileprivate func buildTodayWordsAndDayWordCardStates(_ dayWords: [DayWords]) {
+    mutating func buildTodayWordCardStates(_ dayWords: [DayWords]) {
         if let row = dayWords.firstIndex(where: { $0.dayNumber == self.currentDay }) {
             todayWords = .init(uniqueElements: dayWords[row].words)
             let cardState: IdentifiedArrayOf<DayWordCardState> = .init(
@@ -44,9 +44,10 @@ extension WordState {
           currentHour = startHour
         }
       
-      if UserDefaults.words == words {
+        print(#line, UserDefaults.dayWords.count)
+        if UserDefaults.words == words && !UserDefaults.dayWords.isEmpty {
           dayWords = UserDefaults.dayWords
-          buildTodayWordsAndDayWordCardStates(dayWords)
+            buildTodayWordCardStates(dayWords)
       } else {
           for word in words {
   
@@ -73,11 +74,10 @@ extension WordState {
             hourIndex += 1
             
           }
+          
           UserDefaults.dayWords = dayWords
-          buildTodayWordsAndDayWordCardStates(dayWords)
+          buildTodayWordCardStates(dayWords)
       }
-
-
     
     return dayWords
   }
@@ -86,6 +86,21 @@ extension WordState {
     Effect(value: self.buildDayWords(words: words))
   }
   
+  mutating func buildDayWordsAndAddNotification(
+    words: [Word],
+    environment: WordEnvironment
+  ) -> Effect<WordAction, Never> {
+      return .concatenate(
+        buildDayWordsEffectResult(words: words)
+          .receive(on: environment.mainQueue)
+          .eraseToEffect(),
+        
+        addNotificationsActionEffectResult(words: words, environment: environment)
+          .receive(on: environment.mainQueue)
+          .eraseToEffect()
+      )
+    }
+    
   mutating func buildDayWordsEffectResult(words: [Word]) -> Effect<WordAction, Never> {
     Effect(value: .receiveDayWords(.success(self.buildDayWords(words: words))))
   }
@@ -132,6 +147,9 @@ extension WordState {
       let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
       let request = UNNotificationRequest(identifier: word.id, content: content, trigger: trigger)
       
+        if currentDay >= 365 {
+           currentDay = 1
+        }
       hourIndex += 1
       
       requests.append(request)

@@ -66,18 +66,6 @@ public let wordReducer = Reducer<
     ),
   Reducer { state, action, environment in
     
-    func buildDayWordsAndAddNotification(words: [Word]) -> Effect<WordAction, Never> {
-      return .concatenate(
-        state.buildDayWordsEffectResult(words: words)
-          .receive(on: environment.mainQueue)
-          .eraseToEffect(),
-        
-        state.addNotificationsActionEffectResult(words: words, environment: environment)
-          .receive(on: environment.mainQueue)
-          .eraseToEffect()
-      )
-    }
-    
     switch action {
     case .onApper:
         
@@ -106,6 +94,11 @@ public let wordReducer = Reducer<
             return .none
         }
         
+        if state.isSettingsNavigationActive {
+            state.isLoading = false
+          return .none // for now
+        }
+        
         return environment.wordClient.words(state.from, state.to)
             .subscribe(on: environment.backgroundQueue)
             .receive(on: environment.mainQueue)
@@ -125,17 +118,7 @@ public let wordReducer = Reducer<
       
       if UserDefaults.words == responseWords {
         if nestedWords == responseWords {
-          if let row = dayWords.firstIndex(where: { $0.dayNumber == state.currentDay }) {
-            state.todayWords = .init(uniqueElements: dayWords[row].words)
-            
-            let cardState: IdentifiedArrayOf<DayWordCardState> = .init(
-              uniqueElements: dayWords[row].words
-                .enumerated()
-                .map { idx, item in DayWordCardState.init(id: idx, word: item) }
-            )
-            state.dayWordCardState = .init(dayWordCardStates: cardState )
-          }
-          
+            state.buildTodayWordCardStates(dayWords)
           return .concatenate(
             environment.userNotificationClient
               .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
@@ -180,18 +163,19 @@ public let wordReducer = Reducer<
       
     case let .receiveDayWords(.failure(error)):
       state.isLoading = false
+        assertionFailure("api request fail \(error.localizedDescription)")
       // handle error
       return .none
       
     case let .receiveUserDefaultsWords(.success(udwords)):
-      return buildDayWordsAndAddNotification(words: udwords)
+        return state.buildDayWordsAndAddNotification(words: udwords, environment: environment)
       
     case let .receiveUserDefaultsWords(.failure(error)):
         state.isLoading = false
       return .none
       
     case let .requestDayWords(words):
-      return buildDayWordsAndAddNotification(words: words)
+        return state.buildDayWordsAndAddNotification(words: words, environment: environment)
       
     case .userNotifications: return .none
 
