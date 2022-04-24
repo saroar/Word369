@@ -96,7 +96,6 @@ extension WordState {
         let startHour = startHour
         let endHour = endHour
         
-        
         for item in 0...64 {
            
             var currentHourNext = currentHour + 1
@@ -115,11 +114,11 @@ extension WordState {
             
             let hour = fromDayStartHourToEndHours[hourIndex]
             
-            var dateMatching = Calendar.current.dateComponents([.day, .hour, .minute], from: now)
+            dateComponents = Calendar.current.dateComponents([.day, .hour, .minute], from: now)
+            dateComponents.hour = hour
+//            dateComponents.minute = Date().minute + 1
             
-            dateMatching.hour = hour
-            
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateMatching, repeats: false)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
                
             let word = words[item]
             let title  = word.buildNotificationTitle(from: from, to: to)
@@ -172,16 +171,6 @@ extension WordState {
         return daysInYear
     }
     
-}
-
-extension DateComponents {
-    static func triggerFor(day: Int, hour: Int) -> DateComponents {
-        var component = DateComponents()
-//        component.day = day
-        component.hour = hour
-//        component.minute =  Date().minute + 1
-        return component
-    }
 }
 
 extension Date {

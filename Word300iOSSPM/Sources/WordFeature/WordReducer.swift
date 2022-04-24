@@ -76,10 +76,6 @@ public let wordReducer = Reducer<
       state.startHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.startHour.rawValue)
       state.endHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.endHour.rawValue)
       
-      state.dateComponents.calendar = Calendar.current
-      state.dateComponents.calendar?.timeZone = .current
-      state.dateComponents.day = state.currentDayInt
-      
       UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
         for notification in notifications {
           debugPrint(#line, "DeliveredNotification", notification.request.content.userInfo)
@@ -193,7 +189,7 @@ public let wordReducer = Reducer<
         
     case let .userNotifications(.willPresentNotification(_, completionHandler)):
         return .fireAndForget {
-            completionHandler([.list, .banner, .badge, .sound])
+            completionHandler([.list, .badge, .sound])
         }
         
     case .userNotifications: return .none
