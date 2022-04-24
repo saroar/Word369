@@ -11,6 +11,7 @@ import ComposableUserNotifications
 import WordFeature
 import UserDefaultsClient
 import SharedModels
+import UserNotifications
 
 public enum WelcomeTag: Equatable {
   case l, a, b
@@ -142,7 +143,7 @@ extension WelcomeEnvironment {
   )
   
   static public var mock: WelcomeEnvironment = .init(
-    userNotificationClient: .noop,
+    userNotificationClient: .mock(),
     userDefaultsClient: .noop,
     mainQueue: .immediate,
     backgroundQueue: .immediate
@@ -156,11 +157,14 @@ public let welcomeReducer = Reducer<
   switch action {
     
   case .onApper:
+      print(UserDefaults.currentLanguage)
     
       if UserDefaults.currentLanguage.name.isEmpty {
         state.currentLngCode = LanguageCode.list
           .filter { $0.code == Locale.current.regionCode?.lowercased() }
           .first ?? LanguageCode.bangla
+          
+          UserDefaults.currentLanguage = state.currentLngCode
       } else {
         state.currentLngCode = UserDefaults.currentLanguage
       }
@@ -659,9 +663,9 @@ struct WelcomeViewL: View {
 
 extension UserDefaults {
   // MARK: - Words
-  @UserDefaultPublished(UserDefaultKeys.currentLanguage.rawValue, defaultValue: LanguageCode.bangla)
+  @UserDefaultPublished(UserDefaultKeys.currentLanguage.rawValue, defaultValue: LanguageCode.empty)
   public static var currentLanguage: LanguageCode
 
-  @UserDefaultPublished(UserDefaultKeys.learnLanguage.rawValue, defaultValue: LanguageCode.english)
+  @UserDefaultPublished(UserDefaultKeys.learnLanguage.rawValue, defaultValue: LanguageCode.empty)
   public static var learnLanguage: LanguageCode
 }

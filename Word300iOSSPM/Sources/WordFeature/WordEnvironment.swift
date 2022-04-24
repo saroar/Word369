@@ -48,7 +48,7 @@ extension WordEnvironment {
   
   static public var mock: WordEnvironment = .init(
     mainQueue: .immediate, backgroundQueue: .immediate,
-    userNotificationClient: .noop,
+    userNotificationClient: .mock(),
     userDefaultsClient: .noop,
     wordClient: .live
   )

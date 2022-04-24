@@ -24,10 +24,11 @@ public enum WordAction {
   case receiveUserDefaultsWords(Result<[Word], Never>)
   
   case requestDayWords([Word])
-  case receiveDayWords(Result<[DayWords], NSError>)
+  case receiveDayWords(Result<[DayWords], Never>)
   
-  case userNotifications(UserNotificationClient.DelegateEvent)
-  
+  case userNotifications(UserNotificationClient.Action)
+    case receiveDeliveredNotifications(Result<[ComposableUserNotifications.Notification], Never>)
+    
   case dayWords(DayWordCardsAction)
   case settings(SettingsAction)
   case settingsView(isNavigate: Bool)

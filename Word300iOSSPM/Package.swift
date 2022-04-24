@@ -15,15 +15,15 @@ let package = Package(
         .library(name: "DayWordCardsFeature", targets: ["DayWordCardsFeature"]),
         .library(name: "DayWordCardFeature", targets: ["DayWordCardFeature"]),
         .library(name: "SettingsFeature", targets: ["SettingsFeature"]),
-        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
-        .library(name: "ComposableUserNotifications", targets: ["ComposableUserNotifications"]),
+        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"])
     ],
 
     dependencies: [
       .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "0.28.1"),
       .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.9.0"),
       .package(url: "https://github.com/pointfreeco/xctest-dynamic-overlay", from: "0.2.0"),
-      .package(url: "https://github.com/AddaMeSPB/HTTPRequestKit.git", from: "3.0.0")
+      .package(url: "https://github.com/AddaMeSPB/HTTPRequestKit.git", from: "3.0.0"),
+      .package(url: "https://github.com/miiha/composable-user-notifications", from: "0.2.0"),
     ],
 
     targets: [
@@ -32,7 +32,8 @@ let package = Package(
             name: "AppFeature",
             dependencies: [
               .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-              "ComposableUserNotifications", "WordFeature", "HTTPRequestKit", "WordClient",
+              .product(name: "ComposableUserNotifications", package: "composable-user-notifications"),
+              "WordFeature", "HTTPRequestKit", "WordClient",
               "SharedModels", "UserDefaultsClient"
             ]
         ),
@@ -41,7 +42,8 @@ let package = Package(
             name: "WordFeature",
             dependencies: [
               .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-              "ComposableUserNotifications", "SharedModels", "UserDefaultsClient",
+              .product(name: "ComposableUserNotifications", package: "composable-user-notifications"),
+              "SharedModels", "UserDefaultsClient",
               "HTTPRequestKit", "WordClient", "DayWordCardsFeature", "SettingsFeature"
             ]
         ),
@@ -66,7 +68,8 @@ let package = Package(
           name: "SettingsFeature",
           dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            "SharedModels", "ComposableUserNotifications", "UserDefaultsClient"
+            .product(name: "ComposableUserNotifications", package: "composable-user-notifications"),
+            "SharedModels", "UserDefaultsClient"
           ]
         ),
 
@@ -77,14 +80,6 @@ let package = Package(
           dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
             "SharedModels", "HTTPRequestKit"
-          ]
-        ),
-
-        .target(
-          name: "ComposableUserNotifications",
-          dependencies: [
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            .product(name: "XCTestDynamicOverlay", package: "xctest-dynamic-overlay"),
           ]
         ),
 

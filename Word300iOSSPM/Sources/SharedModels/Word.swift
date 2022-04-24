@@ -34,11 +34,11 @@ extension Word {
         var result = ""
         
         if from == "english" || to == "english" {
-            result = englishTitle
+            result += englishTitle
         }
         
         if from == "russian" || to == "russian" {
-            result = russianTitle ?? ""
+            result += russianWord != nil ? " -> \(russianWord ?? "")" : ""
         }
         
         return result
@@ -48,11 +48,11 @@ extension Word {
         var result = ""
         
         if from == "english" || to == "english" {
-            result = englishDefinition
+            result += englishDefinition
         }
         
         if from == "russian" || to == "russian" {
-            result = russianDefinition ?? ""
+            result += russianDefinition != nil ? " -> \(russianDefinition ?? "")" : ""
         }
         
         return result
@@ -68,21 +68,21 @@ public struct Word: Equatable, Identifiable, Codable {
     public let englishImageLink: String?
     public let englishVideoLink: String?
     
-    public let russianWord: String?
-    public let russianDefinition: String?
-    public let russianImageLink: String?
-    public let russianVideoLink: String?
+    public var russianWord: String?
+    public var russianDefinition: String?
+    public var russianImageLink: String?
+    public var russianVideoLink: String?
     
-    public let banglaWord: String?
-    public let banglaDefinition: String?
-    public let banglaImageLink: String?
-    public let banglaVideoLink: String?
+    public var banglaWord: String?
+    public var banglaDefinition: String?
+    public var banglaImageLink: String?
+    public var banglaVideoLink: String?
     
-    public let isReadFromNotification: Bool
-    public let isReadFromView: Bool
+    public var isReadFromNotification: Bool
+    public var isReadFromView: Bool
     
-    public let level: WordLevel
-    public let user: User?
+    public var level: WordLevel
+    public var user: User?
     
     public var createdAt: Date?
     public var updatedAt: Date?
@@ -151,6 +151,16 @@ public struct Word: Equatable, Identifiable, Codable {
         self.user = word.user
         self.createdAt = word.createdAt
         self.updatedAt = word.updatedAt
+    }
+}
+
+extension Word: Hashable {
+    public static func == (lhs: Word, rhs: Word) -> Bool {
+        return lhs.id == rhs.id && lhs.id == rhs.id
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 

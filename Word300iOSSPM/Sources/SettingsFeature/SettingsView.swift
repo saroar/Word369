@@ -56,7 +56,7 @@ extension SettingsEnvironment {
   
   public static let mock: SettingsEnvironment = .init(
       mainQueue: .immediate,
-      userNotificationClient: UserNotificationClient.noop,
+      userNotificationClient: UserNotificationClient.mock(),
       userDefaultsClient: UserDefaultsClient.noop
     )
   
@@ -171,7 +171,7 @@ extension NotificationSettingsEnvironment {
   
   public static let mock: NotificationSettingsEnvironment = .init(
       mainQueue: .immediate,
-      userNotificationClient: UserNotificationClient.noop
+      userNotificationClient: UserNotificationClient.mock()
     )
   
   public static let live: NotificationSettingsEnvironment = .init(
@@ -185,11 +185,11 @@ let notificationSettingsReducer = Reducer<NotificationSettingsState, Notificatio
     
   switch action {
   case .onAppear:
-      return environment.userNotificationClient.getNotificationSettings
-          .receive(on: environment.mainQueue)
-          .map { $0.settings }
-          .catchToEffect()
-          .map(NotificationSettingsAction.setting)
+      return .none
+//      environment.userNotificationClient.getNotificationSettings
+//          .receive(on: environment.mainQueue)
+//          .catchToEffect()
+//          .map(NotificationSettingsAction.setting)
 
   case let .setting(.success(settings)):
       state.settings = settings

@@ -12,5 +12,6 @@ public enum UserDefaultKeys: String, CaseIterable {
 
   currentLanguage, learnLanguage, wordLevel,
   wordBeginner, wordIntermediate, wordAdvanced,
-  dayWordsBeginner, dayWordsIntermediate, dayWordsAdvanced
+  dayWordsBeginner, dayWordsIntermediate, dayWordsAdvanced,
+  deliveredNotificationWords
 }

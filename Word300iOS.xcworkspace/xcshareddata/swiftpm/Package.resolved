@@ -11,6 +11,15 @@
         }
       },
       {
+        "package": "composable-user-notifications",
+        "repositoryURL": "https://github.com/miiha/composable-user-notifications",
+        "state": {
+          "branch": null,
+          "revision": "dec82786e712f242e8e54ae81c26f30c61865673",
+          "version": "0.2.0"
+        }
+      },
+      {
         "package": "HTTPRequestKit",
         "repositoryURL": "https://github.com/AddaMeSPB/HTTPRequestKit.git",
         "state": {

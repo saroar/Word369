@@ -23,7 +23,8 @@ public enum AppState: Equatable {
 public enum AppAction {
   case welcome(WelcomeAction)
   case word(WordAction)
-  case userNotifications(UserNotificationClient.DelegateEvent)
+  case userNotifications(UserNotificationClient.Action)
+case requestAuthorizationResponse(Result<Bool, UserNotificationClient.Error>)
   case scenePhase(ScenePhase)
 }
 
@@ -57,11 +58,12 @@ extension AppEnvironment {
   )
 
   static public var mock: AppEnvironment = .init(
-    userNotificationClient: .noop,
+    userNotificationClient: .mock(),
     userDefaultsClient: .noop,
     mainQueue: .immediate,
     backgroundQueue: .immediate
   )
+
 }
 
 public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
@@ -84,8 +86,7 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
 
     case .welcome(.moveToWordView):
       state = .word(.init(dayWordCardState: DayWordCardsState.init()))
-      
-      return .none
+        return .none
 
     case .welcome:
 
@@ -96,8 +97,13 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
       }
 
       return .none
+
     case let .word(action):
       return .none
+        
+    case .userNotifications:
+      return .none
+        
     case let .scenePhase(phase):
       switch phase {
       case .background: debugPrint(#line, "background")
@@ -105,32 +111,25 @@ public let appReducer = Reducer<AppState, AppAction, AppEnvironment>.combine(
       case .inactive: debugPrint(#line, "inactive")
         return .none
       case .active: debugPrint(#line, "active")
-
-        return .merge(
-          // Set notifications delegate
-          environment.userNotificationClient.delegate
-            .map(AppAction.userNotifications),
-
-          environment.userNotificationClient.getNotificationSettings
-            .receive(on: environment.mainQueue)
-            .flatMap { settings in
-              [.notDetermined].contains(settings.authorizationStatus)
-                ? environment.userNotificationClient.requestAuthorization([.alert, .sound])
-                : settings.authorizationStatus == .authorized
-                  ? environment.userNotificationClient.requestAuthorization([.alert, .sound])
-                  : .none
-            }
-            .eraseToEffect()
-            .fireAndForget()
-          )
+          
+          return .merge(
+            environment.userNotificationClient
+              .delegate()
+              .map(AppAction.userNotifications),
+            
+            environment.userNotificationClient.requestAuthorization([.alert, .badge, .sound])
+                .subscribe(on: DispatchQueue.global(qos: .userInitiated))
+                .receive(on: environment.mainQueue)
+                .catchToEffect()
+                .map(AppAction.requestAuthorizationResponse)
+        )
+          
       @unknown default:
         debugPrint(#line, "default")
         return .none
       }
-
-    case .userNotifications:
-      return .none
-
+    case .requestAuthorizationResponse:
+        return .none
     }
   }
 )

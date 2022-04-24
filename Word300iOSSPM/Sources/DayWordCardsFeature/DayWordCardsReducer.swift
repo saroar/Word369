@@ -42,13 +42,16 @@ public let dayWordCardsReducer = Reducer<DayWordCardsState, DayWordCardsAction, 
     case let .word(id: id, action: action):
       switch action {
       case let .onChanged(value): return .none
-      case let .onRemove(word):
-        state.dayWordCardStates.removeAll(where: { $0.word == word })
+      case let .onRemove(word): // OnUpdate
+          state.dayWordCardStates.removeAll(where: { $0.word == word })
           let currentDay: Int = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
           
           if let row = UserDefaults.dayWords.firstIndex(where: { $0.dayNumber == currentDay }) {
-              UserDefaults.dayWords[row].words.removeAll(where: { $0 == word })
+              if let word = UserDefaults.dayWords[row].words.firstIndex(where: {$0 == word}) {
+                  UserDefaults.dayWords[row].words[word].isReadFromView = true
+              }
           }
+          
         return .none
       case .getGesturePercentage(_, _): return .none
       }
