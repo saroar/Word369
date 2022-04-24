@@ -211,17 +211,20 @@ public let wordReducer = Reducer<
     case let .receiveDeliveredNotifications(.success(notifications)):
         state.deliveredNotificationIDS = notifications.map { $0.request.identifier }
         
-        for id in state.deliveredNotificationIDS {
-            guard let word = state.words[id: id] else {
-                return .none // build from 0
-            }
+        return .concatenate(
             
-            state.words.remove(id: id)
-        }
-        
-        _ = state.buildNotifications(words: state.words)
-        
-        return .none
+            state.removeDeleveriedNotifications()
+                .fireAndForget(),
+            
+            environment.userNotificationClient
+              .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
+              .fireAndForget(),
+            
+            state.buildNotifications(words: state.words)
+                .subscribe(on: DispatchQueue.global(qos: .userInitiated))
+                .receive(on: environment.backgroundQueue)
+                .fireAndForget()
+        )
         
     }
   }

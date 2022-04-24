@@ -86,203 +86,60 @@ extension WordState {
     Effect(value: self.buildDayWords(words: words))
   }
     
-    private func add(word: Word, trigger: UNCalendarNotificationTrigger) -> UNNotificationRequest {
-        let content = UNMutableNotificationContent()
-        content.title = word.buildNotificationTitle(from: from, to: to)
-        content.body = word.buildNotificationDefinition(from: from, to: to)
-        content.categoryIdentifier = "com.addame.words300"
-        content.sound = UNNotificationSound.default
-        
-        return UNNotificationRequest(identifier: word.id, content: content, trigger: trigger)
-    }
-    
-    private mutating func buildNotificationRequests(words: [Word]) -> [UNNotificationRequest] {
-        
-        var hourIndex = hourIndx
-        var currentHour = currentHour
-        let startHour = startHour
-        let endHour = endHour
-        var currentDayInt = currentDayInt
-        
-        /// if current hour bigther or eqal
-        if currentHour >= endHour {
-            dateComponents.day! += 1
-            currentHour = startHour
-        }
-        
-        var currentHourNext = currentHour + 1
-        
-        var requests = [UNNotificationRequest]()
-        
-        for (idx, word) in words.enumerated() where idx < 63 {
-            let center = UNUserNotificationCenter.current()
-            let fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
-            
-            // 1st day start from 9 to 20
-            if hourIndex == fromDayStartHourToEndHours.count {
-                hourIndex = 0
-                // when 1st day is finished
-                // start 2nd dayHours from 0 -> how i can start 2nd day here
-                currentHourNext = startHour - 1 // set start hour from currentNextHour
-                currentDayInt += 1
-            }
-            
-            let gregorian = Calendar(identifier: .gregorian)
-            let now = Date()
-            var dateComponents = gregorian.dateComponents([.year, .month, .day, .hour, .minute, .second], from: now)
-            dateComponents.timeZone = .current
-            
-            dateComponents.day = currentDayInt
-            dateComponents.hour = Date().hour// fromDayStartHourToEndHours[hourIndex]
-            dateComponents.minute = Date().minute + 1
-        
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-
-            let request = add(word: word, trigger: trigger)
-            
-            if currentDayInt >= 365 { currentDayInt = 1 }
-            hourIndex += 1
-        
-            requests.append(request)
-            
-            center.add(request, withCompletionHandler: {(error) in
-                if error != nil {
-                    print("SOMETHING WENT WRONG")
-                }
-            })
-        }
-            
-        return requests
-        
-    }
-    
-  mutating func buildNotificationRequestsEffect(words: [Word]) -> Effect<[UNNotificationRequest], Never> {
-    Effect(value: self.buildNotificationRequests(words: words))
-  }
-    
     mutating func buildNotifications(words: IdentifiedArrayOf<Word>) -> Effect<WordAction, Never> {
         
         var now = Date().toLocalTime()
         var nextDay = 0
         
         var hourIndex = hourIndx
-        var currentHour = currentHour
+        let currentHour = currentHour
         let startHour = startHour
         let endHour = endHour
-        var currentDayInt = currentDayInt
         
-        /// if current hour bigther or eqal
-        if currentHour >= endHour {
-            dateComponents.day! += 1
-            nextDay += 1
-            now = now.adding(days: nextDay)!
-            currentHour = startHour
-        }
         
-        var currentHourNext = currentHour + 1
-        let maxNotifications = 64
-        var countMaxNotifications = 0
-        
-        for word in words where countMaxNotifications <= maxNotifications {
+        for item in 0...64 {
+           
+            var currentHourNext = currentHour + 1
             
-            let fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
-
+            var fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
             // 1st day start from 9 to 20
-            if hourIndex == fromDayStartHourToEndHours.count {
+            if hourIndex > fromDayStartHourToEndHours.count - 1 {
                 hourIndex = 0
                 // when 1st day is finished
                 // start 2nd dayHours from 0 -> how i can start 2nd day here
                 currentHourNext = startHour - 1 // set start hour from currentNextHour
-                currentDayInt += 1
                 nextDay += 1
                 now = now.adding(days: nextDay)!
+                fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
             }
+            
             let hour = fromDayStartHourToEndHours[hourIndex]
-           
-            scheduleNotification(word: word, date: now, hour: hour)
+            
+            var dateMatching = Calendar.current.dateComponents([.day, .hour, .minute], from: now)
+            
+            dateMatching.hour = hour
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateMatching, repeats: false)
+               
+            let word = words[item]
+            let title  = word.buildNotificationTitle(from: from, to: to)
+            let body = word.buildNotificationDefinition(from: from, to: to)
+            
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            content.sound = UNNotificationSound.default
 
-            if currentDayInt >= daysInYear { currentDayInt = 1 }
+            let request = UNNotificationRequest(identifier: word.id, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request)
+            
             hourIndex += 1
-            countMaxNotifications += 1
+            
         }
         
         return .none
     }
 
- private mutating func addNotifications(
-    words: [Word],
-    environment: WordEnvironment
-  ) -> Effect<WordAction, Never> {
-
-    return .merge(
-        self.buildNotificationRequests(words: words).map { request in
-            environment.userNotificationClient.add(request)
-                .subscribe(on: DispatchQueue.global(qos: .userInitiated))
-                .receive(on: environment.backgroundQueue)
-                .mapError({ _ in  HTTPRequest.HRError.nonHTTPResponse })
-                .fireAndForget()
-        }
-    )
-  }
-  
-  mutating func addNotificationsActionEffectResult(
-    words: [Word],
-    environment: WordEnvironment) -> Effect<WordAction, Never> {
-      debugPrint(#line, "concatenate 2st")
-      return addNotifications(words: words, environment: environment)
-  }
-
-    func scheduleNotification(word: Word, date: Date, hour: Int) {
-
-        let center = UNUserNotificationCenter.current()
-        let title  = word.buildNotificationTitle(from: from, to: to)
-        let body = word.buildNotificationDefinition(from: from, to: to)
-        
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        content.sound = UNNotificationSound.default
-        content.categoryIdentifier = "com.addame.words300"
-
-        let calendar = Calendar.current
-        var components = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: date)
-
-        components.hour = hour
-        
-        let component = DateComponents.triggerFor(day: 0, hour: hour)
-        let trigger =  UNCalendarNotificationTrigger(dateMatching: component, repeats: false)
-                      
-        let request = UNNotificationRequest(identifier: word.id, content: content, trigger: trigger)
-        print("INSIDE NOTIFICATION \(content.title)")
-                        
-        center.add(request, withCompletionHandler: {(error) in
-            if error != nil {
-                print("SOMETHING WENT WRONG")
-            }
-        })
-        
-//        center.getDeliveredNotifications { notifications in
-//          for notification in notifications {
-//              debugPrint(#line, "DeliveredNotification", notification)
-//          }
-//        }
-//
-//        center.getPendingNotificationRequests { notifications in
-//            print(#line, "count-- \(notifications.count)" )
-//            for notification in notifications {
-//                debugPrint(#line, "PendingNotification", notification, notification.content.title)
-//            }
-//          }
-
-    }
-    
-    
-            
-    //        let currentYear = calendar.component(.year, from: Date())
-    //        (currentYear...(currentYear+100)).forEach {
-    //          print("\($0): \(daysIn(year: $0))")
-    //        }
-    //
     
     mutating func removeDeleveriedNotifications() -> Effect<WordAction, Never> {
         for id in deliveredNotificationIDS {
@@ -296,7 +153,13 @@ extension WordState {
         return .none
     }
     
-    var daysInYear: Int {
+    //        let currentYear = calendar.component(.year, from: Date())
+    //        (currentYear...(currentYear+100)).forEach {
+    //          print("\($0): \(daysIn(year: $0))")
+    //        }
+    //
+    // https://sarunw.com/posts/getting-number-of-days-between-two-dates/
+   private var daysInYear: Int {
         let calendar = Calendar.current
         let currentYear = calendar.component(.year, from: Date())
         let firstDayOfNextYear = calendar.date(from: DateComponents(year: currentYear + 1, month: 1, day: 1))!
@@ -308,8 +171,7 @@ extension WordState {
         }
         return daysInYear
     }
-    // https://sarunw.com/posts/getting-number-of-days-between-two-dates/
-
+    
 }
 
 extension DateComponents {
@@ -317,6 +179,7 @@ extension DateComponents {
         var component = DateComponents()
 //        component.day = day
         component.hour = hour
+//        component.minute =  Date().minute + 1
         return component
     }
 }
