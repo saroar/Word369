@@ -16,7 +16,8 @@ import Combine
 import DayWordCardsFeature
 import SettingsFeature
 
-public enum WordAction {
+public enum WordAction: Equatable {
+    
   case onApper
   
   case wordResponse(Result<[Word], HTTPRequest.HRError>)
@@ -27,7 +28,8 @@ public enum WordAction {
   case receiveDayWords(Result<[DayWords], Never>)
   
   case userNotifications(UserNotificationClient.Action)
-    case receiveDeliveredNotifications(Result<[ComposableUserNotifications.Notification], Never>)
+  case receiveDeliveredNotifications(Result<[ComposableUserNotifications.Notification], Never>)
+  case getPendingNotificationRequests(Result<[ComposableUserNotifications.Notification.Request], Never>)
     
   case dayWords(DayWordCardsAction)
   case settings(SettingsAction)

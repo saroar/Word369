@@ -10,7 +10,7 @@ import SharedModels
 import ComposableArchitecture
 import DayWordCardFeature
 
-public enum DayWordCardsAction {
+public enum DayWordCardsAction: Equatable {
   case onAppear
   case word(id: Int, action: DayWordCardAction)
 }

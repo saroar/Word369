@@ -76,17 +76,17 @@ public let wordReducer = Reducer<
       state.startHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.startHour.rawValue)
       state.endHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.endHour.rawValue)
       
-      UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
-        for notification in notifications {
-          debugPrint(#line, "DeliveredNotification", notification.request.content.userInfo)
-        }
-      }
-        
-        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
-          for notification in notifications {
-              debugPrint(#line, "PendingNotification", notification, notification.content.title)
-          }
-        }
+//      UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
+//        for notification in notifications {
+//          debugPrint(#line, "DeliveredNotification", notification.request.content.userInfo)
+//        }
+//      }
+//        
+//        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
+//          for notification in notifications {
+//              debugPrint(#line, "PendingNotification", notification, notification.content.title)
+//          }
+//        }
    
         if state.from == "" || state.to == "" {
             //send logs
@@ -189,7 +189,7 @@ public let wordReducer = Reducer<
         
     case let .userNotifications(.willPresentNotification(_, completionHandler)):
         return .fireAndForget {
-            completionHandler([.list, .badge, .sound])
+            completionHandler([.list, .badge, .banner, .sound])
         }
         
     case .userNotifications: return .none
@@ -208,20 +208,27 @@ public let wordReducer = Reducer<
         state.deliveredNotificationIDS = notifications.map { $0.request.identifier }
         
         return .concatenate(
-            
-            state.removeDeleveriedNotifications()
-                .fireAndForget(),
-            
+
             environment.userNotificationClient
               .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
-              .fireAndForget(),
-            
-            state.buildNotifications(words: state.words)
-                .subscribe(on: DispatchQueue.global(qos: .userInitiated))
+                .fireAndForget(),
+
+            state.removeDeleveriedNotifications()
+                .fireAndForget(),
+
+            state.addNotifications(words: state.words, environment: environment)
                 .receive(on: environment.backgroundQueue)
-                .fireAndForget()
+                .fireAndForget(),
+            
+            environment.userNotificationClient.getPendingNotificationRequests()
+                .receive(on: environment.backgroundQueue)
+                .catchToEffect(WordAction.getPendingNotificationRequests)
         )
-        
+      
+    case let .getPendingNotificationRequests(.success(notifications)):
+        print("getPendingNotificationRequests", notifications.map { $0 } )
+        return .none
+    
     }
   }
 )

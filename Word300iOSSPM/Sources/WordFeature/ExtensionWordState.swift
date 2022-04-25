@@ -69,9 +69,7 @@ extension WordState {
               dayWords.append(DayWords(dayNumber: currentDay, words: [Word(word)]))
             }
             
-            if currentDay >= 365 {
-               currentDay = 1
-            }
+            if currentDay >= daysInYear { currentDay = 1 }
             hourIndex += 1
             
           }
@@ -86,20 +84,17 @@ extension WordState {
     Effect(value: self.buildDayWords(words: words))
   }
     
-    mutating func buildNotifications(words: IdentifiedArrayOf<Word>) -> Effect<WordAction, Never> {
-        
-        var now = Date().toLocalTime()
-        var nextDay = 0
+   private mutating func buildNotifications(words: IdentifiedArrayOf<Word>) -> [UNNotificationRequest] {
         
         var hourIndex = hourIndx
         let currentHour = currentHour
         let startHour = startHour
         let endHour = endHour
+        var currentHourNext = currentHour + 1
+        var requests: [UNNotificationRequest] = []
         
         for item in 0...64 {
            
-            var currentHourNext = currentHour + 1
-            
             var fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
             // 1st day start from 9 to 20
             if hourIndex > fromDayStartHourToEndHours.count - 1 {
@@ -107,19 +102,20 @@ extension WordState {
                 // when 1st day is finished
                 // start 2nd dayHours from 0 -> how i can start 2nd day here
                 currentHourNext = startHour - 1 // set start hour from currentNextHour
-                nextDay += 1
-                now = now.adding(days: nextDay)!
+                today = today.adding(days: 1)!
                 fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
             }
             
             let hour = fromDayStartHourToEndHours[hourIndex]
             
-            dateComponents = Calendar.current.dateComponents([.day, .hour, .minute], from: now)
+            print("hours--", hourIndex, hour, today)
+            dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: today)
+            dateComponents.calendar?.timeZone = .current
             dateComponents.hour = hour
-//            dateComponents.minute = Date().minute + 1
+            dateComponents.month = 01
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-               
+            
             let word = words[item]
             let title  = word.buildNotificationTitle(from: from, to: to)
             let body = word.buildNotificationDefinition(from: from, to: to)
@@ -128,19 +124,33 @@ extension WordState {
             content.title = title
             content.body = body
             content.sound = UNNotificationSound.default
+            content.categoryIdentifier = "com.addame.words300"
 
             let request = UNNotificationRequest(identifier: word.id, content: content, trigger: trigger)
-            UNUserNotificationCenter.current().add(request)
-            
+            requests.append(request)
+
             hourIndex += 1
-            
         }
         
-        return .none
+        return requests
     }
+    
+   mutating func addNotifications(
+       words: IdentifiedArrayOf<Word>,
+       environment: WordEnvironment
+     ) -> Effect<Void, Error>  {
+       
+       return .merge(
+                buildNotifications(words: words).map { request in
+                   environment.userNotificationClient.add(request)
+                       .mapError({ _ in  HTTPRequest.HRError.nonHTTPResponse })
+                       .fireAndForget()
+               }
+         )
+     }
 
     
-    mutating func removeDeleveriedNotifications() -> Effect<WordAction, Never> {
+    mutating func removeWordFromDeleveriedNotificationsList() -> Effect<WordAction, Never> {
         for id in deliveredNotificationIDS {
             guard let _ = words[id: id] else {
                 return .none // build from 0
@@ -171,28 +181,4 @@ extension WordState {
         return daysInYear
     }
     
-}
-
-extension Date {
-
-    /// Returns a Date with the specified amount of components added to the one it is called with
-    func add(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0, minutes: Int = 0, seconds: Int = 0) -> Date? {
-        let components = DateComponents(year: years, month: months, day: days, hour: hours, minute: minutes, second: seconds)
-        return Calendar.current.date(byAdding: components, to: self)
-    }
-
-    /// Returns a Date with the specified amount of components subtracted from the one it is called with
-    func subtract(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0, minutes: Int = 0, seconds: Int = 0) -> Date? {
-        return add(years: -years, months: -months, days: -days, hours: -hours, minutes: -minutes, seconds: -seconds)
-    }
-
-}
-
-
-extension Date {
-    func toLocalTime() -> Date {
-        let timezone    = TimeZone.current
-        let seconds     = TimeInterval(timezone.secondsFromGMT(for: self))
-        return Date(timeInterval: seconds, since: self)
-    }
 }

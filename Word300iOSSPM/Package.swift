@@ -15,7 +15,8 @@ let package = Package(
         .library(name: "DayWordCardsFeature", targets: ["DayWordCardsFeature"]),
         .library(name: "DayWordCardFeature", targets: ["DayWordCardFeature"]),
         .library(name: "SettingsFeature", targets: ["SettingsFeature"]),
-        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"])
+        .library(name: "UserDefaultsClient", targets: ["UserDefaultsClient"]),
+        .library(name: "Helpers", targets: ["Helpers"])
     ],
 
     dependencies: [
@@ -43,11 +44,12 @@ let package = Package(
             dependencies: [
               .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
               .product(name: "ComposableUserNotifications", package: "composable-user-notifications"),
-              "SharedModels", "UserDefaultsClient",
+              "SharedModels", "UserDefaultsClient", "Helpers",
               "HTTPRequestKit", "WordClient", "DayWordCardsFeature", "SettingsFeature"
             ]
         ),
-
+        .testTarget(name: "WordFeatureTests", dependencies: ["WordFeature"]),
+        
         .target(
             name: "DayWordCardsFeature",
             dependencies: [
@@ -88,7 +90,9 @@ let package = Package(
           dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
           ]
-        )
+        ),
+        
+        .target(name: "Helpers")
 
     ]
 )

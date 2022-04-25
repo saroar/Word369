@@ -157,8 +157,7 @@ public let welcomeReducer = Reducer<
   switch action {
     
   case .onApper:
-      print(UserDefaults.currentLanguage)
-    
+
       if UserDefaults.currentLanguage.name.isEmpty {
         state.currentLngCode = LanguageCode.list
           .filter { $0.code == Locale.current.regionCode?.lowercased() }

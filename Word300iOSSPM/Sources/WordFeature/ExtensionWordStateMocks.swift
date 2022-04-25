@@ -139,9 +139,13 @@ extension WordState {
     
   static public var mock: WordState = .init(
     words: wordsMock,
-    dayWordCardState: DayWordCardsState(
-      dayWordCardStates: .init(uniqueElements: [.init(id: 0, word: Word(englishWord: "Apple", englishDefinition: "Apple Def", user: .demo))])
-    ),
-    dayWords: [dayWordsMock]
+    dayWords: [dayWordsMock], dayWordCardState: DayWordCardsState(
+        dayWordCardStates: .init(
+            uniqueElements: [
+                .init(id: 0, word: wordsMock[0]),
+                .init(id: 1, word: wordsMock[1]),
+                .init(id: 2, word: wordsMock[2])
+            ])
+    )
   )
 }

@@ -30,7 +30,7 @@ public struct SettingsState: Equatable {
     public init() {}
 }
 
-public enum SettingsAction {
+public enum SettingsAction: Equatable {
     case onAppear
     case setSheet(isPresented: Bool)
     case notificationSettings(NotificationSettingsAction)
@@ -149,7 +149,7 @@ public struct NotificationSettingsState: Equatable {
   public init() {}
 }
 
-public enum NotificationSettingsAction {
+public enum NotificationSettingsAction: Equatable {
     case onAppear
     case setting(Result<UNNotificationSettings, Never>)
 }

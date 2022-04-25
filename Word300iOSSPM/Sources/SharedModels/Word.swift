@@ -182,3 +182,38 @@ public struct User: Codable, Equatable {
 extension User {
     public static var demo: User = .init(fullName: "Saroar", language: "ru", id: "624c31898addf0419b877915", role: "superAdmin")
 }
+
+extension Word {
+    public static let mockEmpty: Word = .init(englishWord: "", englishDefinition: "")
+    public static let mockDatas: [Word] = [
+        Word(
+            id: UUID().uuidString, icon: "🍏", englishWord: "Apple", englishDefinition: "AppleAppleAppleAppleAppleApple", englishImageLink: nil, englishVideoLink: nil,
+            
+            russianWord: "Яблока", russianDefinition: "ЯблокаЯблокаЯблокаЯблокаЯблокаЯблока", russianImageLink: nil, russianVideoLink: nil,
+            
+            banglaWord: "অ্যাপল", banglaDefinition: "অ্যাপলঅ্যাপলঅ্যাপলঅ্যাপল", banglaImageLink: nil, banglaVideoLink: nil,
+            
+            isReadFromNotification: false, isReadFromView: false, level: .beginner, user: nil, createdAt: nil, updatedAt: nil
+        ),
+        
+        Word(
+            id: UUID().uuidString, icon: "🧰", englishWord: "Able", englishDefinition: "AbleAbleAbleAbleAbleAble", englishImageLink: nil, englishVideoLink: nil,
+            
+            russianWord: "Способный", russianDefinition: "СпособныйСпособныйСпособныйСпособныйСпособный", russianImageLink: nil, russianVideoLink: nil,
+            
+            banglaWord: "সক্ষম", banglaDefinition: "সক্ষমসক্ষমসক্ষমসক্ষমসক্ষমসক্ষম", banglaImageLink: nil, banglaVideoLink: nil,
+            
+            isReadFromNotification: false, isReadFromView: false, level: .beginner, user: nil, createdAt: nil, updatedAt: nil
+        ),
+        
+        Word(
+            id: UUID().uuidString, icon: "💨", englishWord: "Air", englishDefinition: "AirAirAirAirAirAir", englishImageLink: nil, englishVideoLink: nil,
+            
+            russianWord: "Воздух", russianDefinition: "ВоздухВоздухВоздухВоздух", russianImageLink: nil, russianVideoLink: nil,
+            
+            banglaWord: "এয়ার", banglaDefinition: "এয়ারএয়ারএয়ারএয়ারএয়ার", banglaImageLink: nil, banglaVideoLink: nil,
+            
+            isReadFromNotification: false, isReadFromView: false, level: .beginner, user: nil, createdAt: nil, updatedAt: nil
+        )
+    ]
+}
