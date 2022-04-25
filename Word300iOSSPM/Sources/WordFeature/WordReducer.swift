@@ -213,7 +213,7 @@ public let wordReducer = Reducer<
               .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
                 .fireAndForget(),
 
-            state.removeDeleveriedNotifications()
+            state.removeWordFromDeleveriedNotificationsList()
                 .fireAndForget(),
 
             state.addNotifications(words: state.words, environment: environment)
