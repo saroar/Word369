@@ -33,49 +33,46 @@ extension WordState {
         dayWords.append(DayWords(dayNumber: self.currentDayInt))
         
         var hourIndex = self.hourIndx
-        var currentHour = self.currentHour
+        let currentHourInt = self.currentHour
         let startHour = self.startHour
         let endHour = self.endHour
         var currentDay = self.currentDayInt
-        
-        var startNextHourFromCurrent = currentHour + 1
-        
+        var currentHourNext = currentHourInt + 1
+       
         /// if current hour bigther or eqal
-        if currentHour >= endHour {
-          currentDay += 1
-          currentHour = startHour
-        }
-      
-        print(#line, UserDefaults.dayWords.count)
-        if UserDefaults.words == words && !UserDefaults.dayWords.isEmpty {
-          dayWords = UserDefaults.dayWords
-        } else {
-          for word in words {
-  
-            let fromDayStartHourToEndHours = (startNextHourFromCurrent...endHour)
-  
-            if hourIndex == fromDayStartHourToEndHours.count {
-              hourIndex = 0
-              // when 1st day is finished
-              // start 2nd dayHours from 0 -> how i can start 2nd day here
-              startNextHourFromCurrent = startHour - 1 // set start hour from currentNextHour
-              
-              currentDay += 1
-            }
-            
-            if let row = dayWords.firstIndex(where: { $0.dayNumber == currentDay }) {
-              dayWords[row].words.append(Word(word))
-            } else {
-              dayWords.append(DayWords(dayNumber: currentDay, words: [Word(word)]))
-            }
-            
-            if currentDay >= daysInYear { currentDay = 1 }
-            hourIndex += 1
-            
-          }
-
-          UserDefaults.dayWords = dayWords
+      if currentHourNext > endHour {
+          currentHourNext = startHour
       }
+      
+        print(#line, UserDefaults.dayWords)
+        
+      for word in words {
+
+        let fromDayStartHourToEndHours = (currentHourNext...endHour)
+
+        if hourIndex == fromDayStartHourToEndHours.count {
+          hourIndex = 0
+          // when 1st day is finished
+          // start 2nd dayHours from 0 -> how i can start 2nd day here
+            currentHourNext = startHour - 1 // set start hour from currentNextHour
+          
+          currentDay += 1
+    
+        }
+        
+        if let row = dayWords.firstIndex(where: { $0.dayNumber == currentDay }) {
+          dayWords[row].words.append(Word(word))
+        } else {
+          dayWords.append(DayWords(dayNumber: currentDay, words: [Word(word)]))
+        }
+        
+        if currentDay >= daysInYear { currentDay = 1 }
+        hourIndex += 1
+        
+      }
+
+      UserDefaults.dayWords = dayWords
+      
     
     return dayWords
   }
@@ -92,9 +89,17 @@ extension WordState {
         let endHour = endHour
         var currentHourNext = currentHour + 1
         var requests: [UNNotificationRequest] = []
-        
-        for item in 0...64 {
-           
+       
+       if currentHourNext > endHour {
+           currentHourNext = startHour
+           today = today.adding(days: 1)!
+       }
+       
+       let totalNotifications = words.count >= 64 ? 64 : words.count
+       
+        for item in 0...totalNotifications - 1 {
+            let word = words[item]
+            
             var fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
             // 1st day start from 9 to 20
             if hourIndex > fromDayStartHourToEndHours.count - 1 {
@@ -107,16 +112,16 @@ extension WordState {
             }
             
             let hour = fromDayStartHourToEndHours[hourIndex]
-            
+            let c = self.requiredComponents()
             print("hours--", hourIndex, hour, today)
-            dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: today)
+            dateComponents = Calendar.autoupdatingCurrent.dateComponents(c, from: today)
             dateComponents.calendar?.timeZone = .current
             dateComponents.hour = hour
-            dateComponents.month = 01
+            dateComponents.minute = 01
+            
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
             
-            let word = words[item]
             let title  = word.buildNotificationTitle(from: from, to: to)
             let body = word.buildNotificationDefinition(from: from, to: to)
             
@@ -133,6 +138,12 @@ extension WordState {
         }
         
         return requests
+    }
+    
+    fileprivate func requiredComponents() -> Set<Calendar.Component> {
+
+        return Set<Calendar.Component>.init(arrayLiteral: Calendar.Component.year, Calendar.Component.day, Calendar.Component.month, Calendar.Component.hour, Calendar.Component.minute)
+
     }
     
    mutating func addNotifications(

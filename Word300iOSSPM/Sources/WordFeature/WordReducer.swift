@@ -15,6 +15,7 @@ import WordClient
 import DayWordCardsFeature
 import DayWordCardFeature
 import SettingsFeature
+import Combine
 
 extension UserDefaults {
     // MARK: - Words
@@ -68,25 +69,14 @@ public let wordReducer = Reducer<
       environment: { _ in DayWordCardsEnvironment(mainQueue: .main) }
     ),
   Reducer { state, action, environment in
-    
+      struct WordID: Equatable {}
+      
     switch action {
     case .onApper:
         
       state.isLoading = true      
       state.startHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.startHour.rawValue)
       state.endHour = environment.userDefaultsClient.integerForKey(UserDefaultKeys.endHour.rawValue)
-      
-//      UNUserNotificationCenter.current().getDeliveredNotifications { notifications in
-//        for notification in notifications {
-//          debugPrint(#line, "DeliveredNotification", notification.request.content.userInfo)
-//        }
-//      }
-//        
-//        UNUserNotificationCenter.current().getPendingNotificationRequests { notifications in
-//          for notification in notifications {
-//              debugPrint(#line, "PendingNotification", notification, notification.content.title)
-//          }
-//        }
    
         if state.from == "" || state.to == "" {
             //send logs
@@ -98,15 +88,15 @@ public let wordReducer = Reducer<
           return .none // for now
         }
         
-
         return environment.wordClient.words(state.from, state.to)
-            .subscribe(on: environment.backgroundQueue)
             .receive(on: environment.mainQueue)
-            .catchToEffect()
-            .map(WordAction.wordResponse)
+            .catchToEffect(WordAction.wordResponse)
 
     case let .wordResponse(.success(responseWords)):
-      state.isLoading = false
+        state.isLoading = false
+        if state.isSettingsNavigationActive {
+            return .none // for now
+        }
         
         var wordBeginner = responseWords.filter { $0.level == .beginner }
         UserDefaults.words = wordBeginner
@@ -116,23 +106,17 @@ public let wordReducer = Reducer<
       let nestedWords = dayWords
         .map { $0.words }
         .flatMap { $0 }
-        
-      if state.isSettingsNavigationActive {
-        return .none // for now
-      }
       
         if UserDefaults.words == responseWords && nestedWords.count == responseWords.count {
               return Effect(value: dayWords)
                 .receive(on: environment.mainQueue)
-                .catchToEffect()
-                .map(WordAction.receiveDayWords)
+                .catchToEffect(WordAction.receiveDayWords)
         }
-      
-      return UserDefaultsDataProvider.wordsPublisher
+       
+        return Effect(value: WordAction.receiveUserDefaultsWords(UserDefaults.words))
             .receive(on: environment.mainQueue)
-            .catchToEffect()
-            .map(WordAction.receiveUserDefaultsWords)
-    
+            .eraseToEffect()
+        
     case let .wordResponse(.failure(error)):
       // handle error
         state.isLoading = false
@@ -140,39 +124,20 @@ public let wordReducer = Reducer<
       
     case let .receiveDayWords(.success(dayWords)):
         state.buildTodayWordCardStates(dayWords)
-        
+                
         return environment.userNotificationClient.getDeliveredNotifications()
             .receive(on: environment.mainQueue)
-            .catchToEffect()
-            .map(WordAction.receiveDeliveredNotifications)
-        
-//        state.buildNotificationRequestsEffect(words: nestedWords)
-//            .subscribe(on: DispatchQueue.global(qos: .userInitiated))
-//            .receive(on: environment.backgroundQueue)
-//            .fireAndForget()
-//        state.addNotificationsActionEffectResult(words: nestedWords, environment: environment)
-//            .subscribe(on: DispatchQueue.global(qos: .userInitiated))
-//            .receive(on: environment.backgroundQueue)
-//            .fireAndForget()
-        
-        // get DeliveredNotification + PendingNotifications IDS
-        // from from DayWords for build new notification
+            .catchToEffect(WordAction.receiveDeliveredNotifications)
       
-    case let .receiveUserDefaultsWords(.success(words)):
+    case let .receiveUserDefaultsWords(words):
 
-       words.forEach { word in
-            if state.deliveredNotificationIDS.contains(word.id) {
-                state.deliveredNotificationWords.append(word)
-            }
+        for word in words where state.deliveredNotificationIDS.contains(word.id) {
+            state.deliveredNotificationWords.append(word)
         }
         
         return state.buildDayWordsEffect(words: words)
             .receive(on: environment.mainQueue)
-            .catchToEffect()
-            .map(WordAction.receiveDayWords)
-        
-    case let .receiveUserDefaultsWords(.failure(error)):
-      return .none
+            .catchToEffect(WordAction.receiveDayWords)
       
     case let .requestDayWords(words):
         state.isLoading = false
@@ -211,17 +176,17 @@ public let wordReducer = Reducer<
 
             environment.userNotificationClient
               .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
-                .fireAndForget(),
+              .fireAndForget(),
 
             state.removeWordFromDeleveriedNotificationsList()
                 .fireAndForget(),
 
             state.addNotifications(words: state.words, environment: environment)
-                .receive(on: environment.backgroundQueue)
+                .receive(on: environment.mainQueue)
                 .fireAndForget(),
             
             environment.userNotificationClient.getPendingNotificationRequests()
-                .receive(on: environment.backgroundQueue)
+                .receive(on: environment.mainQueue)
                 .catchToEffect(WordAction.getPendingNotificationRequests)
         )
       
@@ -236,3 +201,5 @@ public let wordReducer = Reducer<
 //environment.userNotificationClient
 //  .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
 //  .fireAndForget()
+
+

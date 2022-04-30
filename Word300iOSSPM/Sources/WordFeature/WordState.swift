@@ -18,6 +18,17 @@ import DayWordCardFeature
 import SettingsFeature
 import Helpers
 
+extension Date {
+    public func localDate() -> Date {
+        let nowUTC = Date()
+        let timeZoneOffset = Double(TimeZone.current.secondsFromGMT(for: nowUTC))
+        guard let localDate = Calendar.current.date(byAdding: .second, value: Int(timeZoneOffset), to: nowUTC) else {return Date()}
+
+        return localDate
+    }
+}
+
+public let todayDate = Date().localDate()
 public struct WordState: Equatable {
     
   public var words: IdentifiedArrayOf<Word> = []
@@ -25,14 +36,14 @@ public struct WordState: Equatable {
   public var dayWords: [DayWords] = []
   public var deliveredNotificationWords: [Word] = []
     
-  public var dayWordCardState: DayWordCardsState
+  public var dayWordCardState: DayWordCardsState = .init()
   public var settingsState: SettingsState?
 
   public var isLoading = false
   public var isSettingsNavigationActive: Bool { self.settingsState != nil }
 
-  public var today = Date()
-  public var currentHour = Calendar.current.component(.hour, from: Date())
+  public var today = Date().localDate()
+    public var currentHour = Date().hour
   public var currentDayInt: Int = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0
   public var startHour: Int = 9
   public var endHour: Int = 20
@@ -48,14 +59,14 @@ public struct WordState: Equatable {
         todayWords: IdentifiedArrayOf<Word> = [],
         dayWords: [DayWords] = [],
         deliveredNotificationWords: [Word] = [],
-        dayWordCardState: DayWordCardsState,
+        dayWordCardState: DayWordCardsState = .init(),
         settingsState: SettingsState? = nil,
         isLoading: Bool = false,
-        today: Date = Date(),
-        currentHour: Int = Calendar.current.component(.hour, from: Date()),
-        currentDayInt: Int = Calendar.current.ordinality(of: .day, in: .year, for: Date()) ?? 0,
+        today: Date = todayDate,
+        currentHour: Int = Date().hour,
+        currentDayInt: Int = Calendar.current.ordinality(of: .day, in: .year, for: todayDate) ?? 0,
         startHour: Int = 9, endHour: Int = 20, hourIndx: Int = 0,
-        dateComponents: DateComponents = DateComponents(),
+        dateComponents: DateComponents = DateComponents.init(calendar: .current, timeZone: .current),
         deliveredNotificationIDS: [String] = [],
         from: String = UserDefaults.currentLanguage.name.lowercased(),
         to: String = UserDefaults.learnLanguage.name.lowercased()

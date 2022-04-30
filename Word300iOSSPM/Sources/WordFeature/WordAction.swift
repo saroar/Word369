@@ -22,7 +22,7 @@ public enum WordAction: Equatable {
   
   case wordResponse(Result<[Word], HTTPRequest.HRError>)
   
-  case receiveUserDefaultsWords(Result<[Word], Never>)
+  case receiveUserDefaultsWords([Word])
   
   case requestDayWords([Word])
   case receiveDayWords(Result<[DayWords], Never>)

@@ -30,7 +30,7 @@ extension WordClient {
   public static var live = Self(
     words: { from, to in
       let builder: HTTPRequest = .build(
-        baseURL: URL(string: "https://word.justcal.me/api/words/language?fromLanguage=\(from)&toLanguage=\(to)")!,
+        baseURL: URL(string: "https://word.justcal.me/api/words/language?from=\(from)&to=\(to)")!,
         method: .get,
         authType: .none,
         path: "",
@@ -69,14 +69,27 @@ extension WordClient {
 extension WordClient {
   public static let empty = Self(
     words: { from, to in 
-        Just([Word(englishWord: "", englishDefinition: "", user: .demo)])
+        Just([])
         .setFailureType(to: HTTPRequest.HRError.self)
         .eraseToAnyPublisher()
     },
     create: { _ in
-        Just(Word(englishWord: "", englishDefinition: "", user: .demo))
+        Just(Word(id: "", englishWord: "", englishDefinition: "", user: .demo))
         .setFailureType(to: HTTPRequest.HRError.self)
         .eraseToAnyPublisher()
     }
   )
+    
+    public static let mock = Self(
+      words: { from, to in
+          Just(Word.mockDatas)
+          .setFailureType(to: HTTPRequest.HRError.self)
+          .eraseToAnyPublisher()
+      },
+      create: { _ in
+          Just(Word(id: "", englishWord: "Apple", englishDefinition: "Apple diff", user: .demo))
+          .setFailureType(to: HTTPRequest.HRError.self)
+          .eraseToAnyPublisher()
+      }
+    )
 }

@@ -97,7 +97,7 @@ public struct Word: Equatable, Identifiable, Codable {
     }
     
     public init(
-        id: String = UUID().uuidString, icon: String? = nil, englishWord: String, englishDefinition: String, englishImageLink: String? = nil, englishVideoLink: String? = nil,
+        id: String, icon: String? = nil, englishWord: String, englishDefinition: String, englishImageLink: String? = nil, englishVideoLink: String? = nil,
         russianWord: String? = nil, russianDefinition: String? = nil, russianImageLink: String? = nil, russianVideoLink: String? = nil,
         banglaWord: String? = nil, banglaDefinition: String? = nil, banglaImageLink: String? = nil, banglaVideoLink: String? = nil,
         isReadFromNotification: Bool = false,
@@ -175,6 +175,10 @@ public struct DayWords: Codable, Equatable, Identifiable {
     }
 }
 
+extension DayWords {
+    public static let happyPath: DayWords = .init(dayNumber: 117, words: Word.mockDatas)
+}
+
 public struct User: Codable, Equatable {
     public let fullName, language, id, role: String
 }
@@ -184,10 +188,10 @@ extension User {
 }
 
 extension Word {
-    public static let mockEmpty: Word = .init(englishWord: "", englishDefinition: "")
+    public static let mockEmpty: Word = .init(id: "", englishWord: "", englishDefinition: "")
     public static let mockDatas: [Word] = [
         Word(
-            id: UUID().uuidString, icon: "🍏", englishWord: "Apple", englishDefinition: "AppleAppleAppleAppleAppleApple", englishImageLink: nil, englishVideoLink: nil,
+            id: "D6168009-CEA2-45FC-874B-1426F7FB1005", icon: "🍏", englishWord: "Apple", englishDefinition: "AppleAppleAppleAppleAppleApple", englishImageLink: nil, englishVideoLink: nil,
             
             russianWord: "Яблока", russianDefinition: "ЯблокаЯблокаЯблокаЯблокаЯблокаЯблока", russianImageLink: nil, russianVideoLink: nil,
             
@@ -197,7 +201,7 @@ extension Word {
         ),
         
         Word(
-            id: UUID().uuidString, icon: "🧰", englishWord: "Able", englishDefinition: "AbleAbleAbleAbleAbleAble", englishImageLink: nil, englishVideoLink: nil,
+            id: "610800E5-A59C-44F5-ACC3-6809F39B42D2", icon: "🧰", englishWord: "Able", englishDefinition: "AbleAbleAbleAbleAbleAble", englishImageLink: nil, englishVideoLink: nil,
             
             russianWord: "Способный", russianDefinition: "СпособныйСпособныйСпособныйСпособныйСпособный", russianImageLink: nil, russianVideoLink: nil,
             
@@ -207,7 +211,7 @@ extension Word {
         ),
         
         Word(
-            id: UUID().uuidString, icon: "💨", englishWord: "Air", englishDefinition: "AirAirAirAirAirAir", englishImageLink: nil, englishVideoLink: nil,
+            id: "FC6F24EF-0DF7-4551-97AA-64E0340860D5", icon: "💨", englishWord: "Air", englishDefinition: "AirAirAirAirAirAir", englishImageLink: nil, englishVideoLink: nil,
             
             russianWord: "Воздух", russianDefinition: "ВоздухВоздухВоздухВоздух", russianImageLink: nil, russianVideoLink: nil,
             

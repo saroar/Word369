@@ -10,12 +10,15 @@
 		C335A11F274B801800FF9B07 /* Word300iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C335A11E274B801800FF9B07 /* Word300iOSApp.swift */; };
 		C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A125274B801E00FF9B07 /* Preview Assets.xcassets */; };
 		C335A133274CE3DD00FF9B07 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = C335A132274CE3DD00FF9B07 /* AppFeature */; };
+		C3E4C2BE281C59270059AA73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3E4C2BD281C59260059AA73 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C335A11B274B801800FF9B07 /* Word300.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word300.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C335A11E274B801800FF9B07 /* Word300iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word300iOSApp.swift; sourceTree = "<group>"; };
 		C335A125274B801E00FF9B07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C3E4C2BD281C59260059AA73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C3E4C2D9281C59DD0059AA73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,7 +53,9 @@
 		C335A11D274B801800FF9B07 /* Word300iOS */ = {
 			isa = PBXGroup;
 			children = (
+				C3E4C2D9281C59DD0059AA73 /* Info.plist */,
 				C335A11E274B801800FF9B07 /* Word300iOSApp.swift */,
+				C3E4C2BD281C59260059AA73 /* Assets.xcassets */,
 				C335A124274B801E00FF9B07 /* Preview Content */,
 			);
 			path = Word300iOS;
@@ -132,6 +137,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C3E4C2BE281C59270059AA73 /* Assets.xcassets in Resources */,
 				C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -272,11 +278,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Word300iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 6989658CU5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Word300iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -302,11 +309,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Word300iOS/Preview Content\"";
 				DEVELOPMENT_TEAM = 6989658CU5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Word300iOS/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

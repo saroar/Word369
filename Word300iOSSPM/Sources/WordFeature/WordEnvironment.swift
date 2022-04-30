@@ -52,4 +52,13 @@ extension WordEnvironment {
     userDefaultsClient: .noop,
     wordClient: .live
   )
+    
+    static public var happyPath: WordEnvironment = .init(
+      mainQueue: .immediate, backgroundQueue: .immediate,
+      userNotificationClient: .mock(
+        requestAuthorization: { _ in Effect(value: true) }
+      ),
+      userDefaultsClient: .noop,
+      wordClient: .mock
+    )
 }

@@ -64,10 +64,10 @@ public struct DayWordCardsView: View {
       let cardOffset = CGFloat(cardCount - 1 - id) * 10
       
       DayWordCardView(store: store)
-        .padding()
-        .animation(.spring())
-        .frame(width: cardWidth, height: 400)
-        .offset(x: 0, y: cardOffset)
+            .padding()
+            .animation(.spring())
+            .frame(width: cardWidth, height: 400)
+            .offset(x: 0, y: cardOffset)
     }
     
   }
