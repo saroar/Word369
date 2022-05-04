@@ -31,6 +31,7 @@ extension Date {
 public let todayDate = Date().localDate()
 public struct WordState: Equatable {
     
+  public var alert: AlertState<WordAction>?
   public var words: IdentifiedArrayOf<Word> = []
   public var todayWords: IdentifiedArrayOf<Word> = []
   public var dayWords: [DayWords] = []

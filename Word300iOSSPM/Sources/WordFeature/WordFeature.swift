@@ -74,6 +74,10 @@ public struct WordView: View {
                     )
                 ) {}
             )
+            .alert(
+              self.store.scope(state: \.alert),
+              dismiss: .alertDismissed
+            )
         }
     }
 }

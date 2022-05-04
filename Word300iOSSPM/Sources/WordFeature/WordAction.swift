@@ -30,9 +30,13 @@ public enum WordAction: Equatable {
   case userNotifications(UserNotificationClient.Action)
   case receiveDeliveredNotifications(Result<[ComposableUserNotifications.Notification], Never>)
   case getPendingNotificationRequests(Result<[ComposableUserNotifications.Notification.Request], Never>)
+  case requestAuthorizationResponse(Result<Bool, UserNotificationClient.Error>)
     
   case dayWords(DayWordCardsAction)
   case settings(SettingsAction)
   case settingsView(isNavigate: Bool)
+  case alertButtonTapped
+  case alertDismissed
+  case openSettingsURLString
   
 }

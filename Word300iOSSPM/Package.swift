@@ -62,7 +62,7 @@ let package = Package(
           name: "DayWordCardFeature",
           dependencies: [
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
-            "SharedModels"
+            "SharedModels", "UserDefaultsClient"
           ]
         ),
         

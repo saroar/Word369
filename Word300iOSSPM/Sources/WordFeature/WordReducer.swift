@@ -88,9 +88,11 @@ public let wordReducer = Reducer<
           return .none // for now
         }
         
-        return environment.wordClient.words(state.from, state.to)
+        return  environment.userNotificationClient.requestAuthorization([.alert, .badge, .sound])
+            .subscribe(on: DispatchQueue.global(qos: .userInitiated))
             .receive(on: environment.mainQueue)
-            .catchToEffect(WordAction.wordResponse)
+            .catchToEffect()
+            .map(WordAction.requestAuthorizationResponse)
 
     case let .wordResponse(.success(responseWords)):
         state.isLoading = false
@@ -179,27 +181,54 @@ public let wordReducer = Reducer<
               .fireAndForget(),
 
             state.removeWordFromDeleveriedNotificationsList()
+                .receive(on: environment.mainQueue)
                 .fireAndForget(),
 
             state.addNotifications(words: state.words, environment: environment)
                 .receive(on: environment.mainQueue)
                 .fireAndForget(),
-            
+
             environment.userNotificationClient.getPendingNotificationRequests()
                 .receive(on: environment.mainQueue)
                 .catchToEffect(WordAction.getPendingNotificationRequests)
         )
-      
+
     case let .getPendingNotificationRequests(.success(notifications)):
         print("getPendingNotificationRequests", notifications.map { $0 } )
         return .none
-    
+
+    case .requestAuthorizationResponse(.success(let value)):
+        if value {
+            return environment.wordClient.words(state.from, state.to)
+                .receive(on: environment.mainQueue)
+                .catchToEffect(WordAction.wordResponse)
+        } else {
+            state.isLoading = false
+            return Effect(value: .alertButtonTapped)
+                .receive(on: environment.mainQueue)
+                .eraseToEffect()
+        }
+
+    case .requestAuthorizationResponse(.failure):
+        return .none
+        
+    case .alertButtonTapped:
+        state.alert = .init(
+          title: .init("Go to Settings?"),
+          message: .init("Without allow notification this app will not work."),
+          primaryButton: .default(TextState("Go To settings"), action: .send(.openSettingsURLString)),
+          secondaryButton: .default(TextState("Cancel"), action: .send(.alertDismissed))
+        )
+        
+        return .none
+        
+    case .alertDismissed:
+        state.alert = nil
+        return .none
+
+    case .openSettingsURLString:
+        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+        return .none
     }
   }
 )
-
-//environment.userNotificationClient
-//  .removePendingNotificationRequestsWithIdentifiers(["com.addame.words300"])
-//  .fireAndForget()
-
-

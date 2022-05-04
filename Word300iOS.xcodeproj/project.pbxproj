@@ -11,7 +11,20 @@
 		C335A126274B801E00FF9B07 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C335A125274B801E00FF9B07 /* Preview Assets.xcassets */; };
 		C335A133274CE3DD00FF9B07 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = C335A132274CE3DD00FF9B07 /* AppFeature */; };
 		C3E4C2BE281C59270059AA73 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C3E4C2BD281C59260059AA73 /* Assets.xcassets */; };
+		C3E4C2E1281D39FF0059AA73 /* Word300UITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E4C2E0281D39FF0059AA73 /* Word300UITests.swift */; };
+		C3E4C2E3281D39FF0059AA73 /* Word300UITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E4C2E2281D39FF0059AA73 /* Word300UITestsLaunchTests.swift */; };
+		C3E4C2EC281E9ADD0059AA73 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E4C2EB281E9ADD0059AA73 /* SnapshotHelper.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C3E4C2E4281D39FF0059AA73 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C335A113274B801800FF9B07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C335A11A274B801800FF9B07;
+			remoteInfo = Word300iOS;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		C335A11B274B801800FF9B07 /* Word300.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Word300.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -19,6 +32,10 @@
 		C335A125274B801E00FF9B07 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		C3E4C2BD281C59260059AA73 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C3E4C2D9281C59DD0059AA73 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		C3E4C2DE281D39FE0059AA73 /* Word300UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Word300UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3E4C2E0281D39FF0059AA73 /* Word300UITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word300UITests.swift; sourceTree = "<group>"; };
+		C3E4C2E2281D39FF0059AA73 /* Word300UITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Word300UITestsLaunchTests.swift; sourceTree = "<group>"; };
+		C3E4C2EB281E9ADD0059AA73 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +47,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3E4C2DB281D39FE0059AA73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -37,6 +61,7 @@
 			isa = PBXGroup;
 			children = (
 				C335A11D274B801800FF9B07 /* Word300iOS */,
+				C3E4C2DF281D39FF0059AA73 /* Word300UITests */,
 				C335A11C274B801800FF9B07 /* Products */,
 				C335A131274CE3DD00FF9B07 /* Frameworks */,
 			);
@@ -46,6 +71,7 @@
 			isa = PBXGroup;
 			children = (
 				C335A11B274B801800FF9B07 /* Word300.app */,
+				C3E4C2DE281D39FE0059AA73 /* Word300UITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,6 +102,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		C3E4C2DF281D39FF0059AA73 /* Word300UITests */ = {
+			isa = PBXGroup;
+			children = (
+				C3E4C2EB281E9ADD0059AA73 /* SnapshotHelper.swift */,
+				C3E4C2E0281D39FF0059AA73 /* Word300UITests.swift */,
+				C3E4C2E2281D39FF0059AA73 /* Word300UITestsLaunchTests.swift */,
+			);
+			path = Word300UITests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,6 +135,24 @@
 			productReference = C335A11B274B801800FF9B07 /* Word300.app */;
 			productType = "com.apple.product-type.application";
 		};
+		C3E4C2DD281D39FE0059AA73 /* Word300UITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C3E4C2E6281D39FF0059AA73 /* Build configuration list for PBXNativeTarget "Word300UITests" */;
+			buildPhases = (
+				C3E4C2DA281D39FE0059AA73 /* Sources */,
+				C3E4C2DB281D39FE0059AA73 /* Frameworks */,
+				C3E4C2DC281D39FE0059AA73 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C3E4C2E5281D39FF0059AA73 /* PBXTargetDependency */,
+			);
+			name = Word300UITests;
+			productName = Word300UITests;
+			productReference = C3E4C2DE281D39FE0059AA73 /* Word300UITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -106,11 +160,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1310;
+				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					C335A11A274B801800FF9B07 = {
 						CreatedOnToolsVersion = 13.1;
+					};
+					C3E4C2DD281D39FE0059AA73 = {
+						CreatedOnToolsVersion = 13.2;
+						TestTargetID = C335A11A274B801800FF9B07;
 					};
 				};
 			};
@@ -128,6 +186,7 @@
 			projectRoot = "";
 			targets = (
 				C335A11A274B801800FF9B07 /* Word300iOS */,
+				C3E4C2DD281D39FE0059AA73 /* Word300UITests */,
 			);
 		};
 /* End PBXProject section */
@@ -142,6 +201,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3E4C2DC281D39FE0059AA73 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -153,7 +219,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C3E4C2DA281D39FE0059AA73 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3E4C2E3281D39FF0059AA73 /* Word300UITestsLaunchTests.swift in Sources */,
+				C3E4C2E1281D39FF0059AA73 /* Word300UITests.swift in Sources */,
+				C3E4C2EC281E9ADD0059AA73 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C3E4C2E5281D39FF0059AA73 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C335A11A274B801800FF9B07 /* Word300iOS */;
+			targetProxy = C3E4C2E4281D39FF0059AA73 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		C335A127274B801E00FF9B07 /* Debug */ = {
@@ -334,6 +418,42 @@
 			};
 			name = Release;
 		};
+		C3E4C2E7281D39FF0059AA73 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6989658CU5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Addeme.com.Word300UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Word300iOS;
+			};
+			name = Debug;
+		};
+		C3E4C2E8281D39FF0059AA73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6989658CU5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Addeme.com.Word300UITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Word300iOS;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -351,6 +471,15 @@
 			buildConfigurations = (
 				C335A12A274B801E00FF9B07 /* Debug */,
 				C335A12B274B801E00FF9B07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C3E4C2E6281D39FF0059AA73 /* Build configuration list for PBXNativeTarget "Word300UITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C3E4C2E7281D39FF0059AA73 /* Debug */,
+				C3E4C2E8281D39FF0059AA73 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

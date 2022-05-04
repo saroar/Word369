@@ -30,6 +30,7 @@ public struct SettingsState: Equatable {
     public init() {}
 }
 
+
 public enum SettingsAction: Equatable {
     case onAppear
     case setSheet(isPresented: Bool)
@@ -143,15 +144,25 @@ public struct SettingsView: View {
 }
 
 
+extension ComposableUserNotifications.Notification.Settings: Equatable {
+    public static func == (
+        lhs: ComposableUserNotifications.Notification.Settings,
+        rhs: ComposableUserNotifications.Notification.Settings) -> Bool {
+            guard let lhss = lhs.rawValue(), let rhss =  rhs.rawValue() else { return false }
+        return lhss == rhss
+    }
+}
+
 public struct NotificationSettingsState: Equatable {
-  public var settings: UNNotificationSettings?
+  public var settings: ComposableUserNotifications.Notification.Settings?
+  public var nfsettings: UNNotificationSettings?
   
   public init() {}
 }
 
 public enum NotificationSettingsAction: Equatable {
     case onAppear
-    case setting(Result<UNNotificationSettings, Never>)
+    case setting(Result<ComposableUserNotifications.Notification.Settings, Never>)
 }
 
 public struct NotificationSettingsEnvironment {
@@ -185,14 +196,14 @@ let notificationSettingsReducer = Reducer<NotificationSettingsState, Notificatio
     
   switch action {
   case .onAppear:
-      return .none
-//      environment.userNotificationClient.getNotificationSettings
-//          .receive(on: environment.mainQueue)
-//          .catchToEffect()
-//          .map(NotificationSettingsAction.setting)
+      return environment.userNotificationClient.getNotificationSettings()
+          .receive(on: environment.mainQueue)
+          .catchToEffect()
+          .map(NotificationSettingsAction.setting)
 
   case let .setting(.success(settings)):
       state.settings = settings
+      state.nfsettings = settings.rawValue()
       return .none
 
   case .setting(.failure):
@@ -220,31 +231,31 @@ public struct NotificationSettingsView: View {
                 Section {
                   SettingRowView(
                     setting: "Authorization Status",
-                    enabled: viewStore.state.settings?.authorizationStatus == UNAuthorizationStatus.authorized)
+                    enabled: viewStore.state.nfsettings?.authorizationStatus == UNAuthorizationStatus.authorized)
                   SettingRowView(
                     setting: "Show in Notification Center",
-                    enabled: viewStore.state.settings?.notificationCenterSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.notificationCenterSetting == .enabled)
                   SettingRowView(
                     setting: "Sound Enabled?",
-                    enabled: viewStore.state.settings?.soundSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.soundSetting == .enabled)
                   SettingRowView(
                     setting: "Badges Enabled?",
-                    enabled: viewStore.state.settings?.badgeSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.badgeSetting == .enabled)
                   SettingRowView(
                     setting: "Alerts Enabled?",
-                    enabled: viewStore.state.settings?.alertSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.alertSetting == .enabled)
                   SettingRowView(
                     setting: "Show on lock screen?",
-                    enabled: viewStore.state.settings?.lockScreenSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.lockScreenSetting == .enabled)
                   SettingRowView(
                     setting: "Alert banners?",
-                    enabled: viewStore.state.settings?.alertStyle == .banner)
+                    enabled: viewStore.state.nfsettings?.alertStyle == .banner)
                   SettingRowView(
                     setting: "Critical Alerts?",
-                    enabled: viewStore.state.settings?.criticalAlertSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.criticalAlertSetting == .enabled)
                   SettingRowView(
                     setting: "Siri Announcement?",
-                    enabled: viewStore.state.settings?.announcementSetting == .enabled)
+                    enabled: viewStore.state.nfsettings?.announcementSetting == .enabled)
                 }
             }
         }

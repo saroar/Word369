@@ -24,7 +24,7 @@ public enum AppAction {
   case welcome(WelcomeAction)
   case word(WordAction)
   case userNotifications(UserNotificationClient.Action)
-case requestAuthorizationResponse(Result<Bool, UserNotificationClient.Error>)
+  case requestAuthorizationResponse(Result<Bool, UserNotificationClient.Error>)
   case scenePhase(ScenePhase)
 }
 

@@ -170,6 +170,10 @@ public let welcomeReducer = Reducer<
 
     state.isBothLanguageEqual = state.currentLngCode == LanguageCode.english
     state.isContinueButtonValid = state.isBothLanguageEqual
+      
+      
+    state.learnLangCode = LanguageCode.english
+      UserDefaults.learnLanguage = LanguageCode.english
     
     return .merge(
       environment.userDefaultsClient
@@ -184,7 +188,7 @@ public let welcomeReducer = Reducer<
     
   case .binding(\.$name):
     state.name = String(state.name.prefix(9))
-    state.isNameValid = state.name.count >= 6
+    state.isNameValid = state.name.count >= 3
 
     state.isContinueButtonValid = !state.isNameValid
     UserDefaults.username = state.name
@@ -416,7 +420,7 @@ struct WelcomeViewA: View {
           
         }
         
-        TextField("Sara", text: viewStore.binding(\.$name))
+        TextField("Cant be less then 3 words*", text: viewStore.binding(\.$name))
           .font(.title)
           .textFieldStyle(RoundedBorderTextFieldStyle())
         Spacer()

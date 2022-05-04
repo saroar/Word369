@@ -19,37 +19,55 @@ public struct DayWordCardView: View {
     self.viewStore = ViewStore(store)
   }
 
-  public var body: some View {
+    fileprivate func english() -> some View {
+        Group {
+            Text("\(viewStore.word.englishTitle)")
+                .font(.title).bold()
+                .foregroundColor(.black)
+                .padding([.top, .leading, .trailing], 16)
+            
+            Text("\(viewStore.word.englishDefinition)")
+                .font(.body)
+                .foregroundColor(.black)
+                .padding([.bottom, .leading, .trailing], 16)
+        }
+    }
+    
+    fileprivate func russian() -> some View {
+        Group {
+            Text("\(viewStore.word.russianTitle ?? "")")
+                .font(.title).bold()
+                .foregroundColor(.black)
+                .padding([.top, .leading, .trailing], 16)
+            Text("\(viewStore.word.russianDefinition ?? "")")
+               .font(.body)
+               .foregroundColor(.black)
+               .padding([.bottom, .leading, .trailing], 16)
+        }
+    }
+    
+    public var body: some View {
     // 1
     GeometryReader { geometry in
       VStack(alignment: .leading) {
-          
-          Text("\(viewStore.word.englishTitle)")
-              .font(.title).bold()
-              .foregroundColor(.black)
-              .padding([.top, .leading, .trailing], 16)
-  
-          Text("\(viewStore.word.englishDefinition)")
-              .font(.body)
-              .foregroundColor(.black)
-              .padding([.bottom, .leading, .trailing], 16)
-        Divider()
-          // 5
+          if viewStore.from == "english" {
+              english()
+              Divider()
+              russian()
+          } else if viewStore.from == "russian" {
+              russian()
+              Divider()
+              english()
+          }
+        
+
           // Image(systemName: "person")
           //   .resizable()
           //   .aspectRatio(contentMode: .fit)
           //   .padding()
           //   .frame(width: geometry.size.width, height: geometry.size.height * 0.75)
           //   .clipped()
-        
-          Text("\(viewStore.word.russianTitle ?? "")")
-              .font(.title).bold()
-              .foregroundColor(.black)
-              .padding([.top, .leading, .trailing], 16)
-          Text("\(viewStore.word.russianDefinition ?? "")")
-             .font(.body)
-             .foregroundColor(.black)
-             .padding([.bottom, .leading, .trailing], 16)
+          
           Spacer()
 //        HStack {
 //          // 5

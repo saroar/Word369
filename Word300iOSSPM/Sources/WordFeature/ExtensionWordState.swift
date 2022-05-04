@@ -92,7 +92,6 @@ extension WordState {
        
        if currentHourNext > endHour {
            currentHourNext = startHour
-           today = today.adding(days: 1)!
        }
        
        let totalNotifications = words.count >= 64 ? 64 : words.count
