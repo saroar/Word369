@@ -172,8 +172,14 @@ public let welcomeReducer = Reducer<
     state.isContinueButtonValid = state.isBothLanguageEqual
       
       
-    state.learnLangCode = LanguageCode.english
-      UserDefaults.learnLanguage = LanguageCode.english
+      if UserDefaults.learnLanguage.name.isEmpty {
+          state.learnLangCode = LanguageCode.english
+          UserDefaults.learnLanguage = LanguageCode.english
+      } else {
+          state.learnLangCode = UserDefaults.learnLanguage
+      }
+    
+    
     
     return .merge(
       environment.userDefaultsClient

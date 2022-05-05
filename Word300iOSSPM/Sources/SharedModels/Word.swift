@@ -30,6 +30,14 @@ extension Word {
         return russianWord
     }
     
+    public var banglaTitle: String? {
+        if let icon = icon, let banglaWord = banglaWord {
+            return icon + " " + banglaWord
+        }
+        
+        return banglaWord
+    }
+    
     public func buildNotificationTitle(from: String, to: String) -> String {
         var result = ""
         
@@ -39,6 +47,10 @@ extension Word {
         
         if from == "russian" || to == "russian" {
             result += russianWord != nil ? " -> \(russianWord ?? "")" : ""
+        }
+        
+        if from == "bangla" || to == "bangla" {
+            result += banglaWord != nil ? " -> \(banglaWord ?? "")" : ""
         }
         
         return result
@@ -53,6 +65,10 @@ extension Word {
         
         if from == "russian" || to == "russian" {
             result += russianDefinition != nil ? " -> \(russianDefinition ?? "")" : ""
+        }
+        
+        if from == "bangla" || to == "bangla" {
+            result += banglaDefinition != nil ? " -> \(banglaDefinition ?? "")" : ""
         }
         
         return result

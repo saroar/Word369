@@ -46,6 +46,19 @@ public struct DayWordCardView: View {
         }
     }
     
+    fileprivate func bangla() -> some View {
+        Group {
+            Text("\(viewStore.word.banglaTitle ?? "")")
+                .font(.title).bold()
+                .foregroundColor(.black)
+                .padding([.top, .leading, .trailing], 16)
+            Text("\(viewStore.word.banglaDefinition ?? "")")
+               .font(.body)
+               .foregroundColor(.black)
+               .padding([.bottom, .leading, .trailing], 16)
+        }
+    }
+    
     public var body: some View {
     // 1
     GeometryReader { geometry in
@@ -53,11 +66,41 @@ public struct DayWordCardView: View {
           if viewStore.from == "english" {
               english()
               Divider()
-              russian()
-          } else if viewStore.from == "russian" {
+              if viewStore.to == "russian" {
+                  russian()
+              }
+              
+              if viewStore.to == "bangla" {
+                  bangla()
+              }
+          }
+          
+          if viewStore.from == "russian" {
               russian()
               Divider()
-              english()
+              
+              if viewStore.from == "english" {
+                  english()
+              }
+              
+              if viewStore.from == "bangla" {
+                  bangla()
+              }
+
+          }
+          
+          if viewStore.from == "bangla" {
+              bangla()
+              
+              Divider()
+              
+              if viewStore.from == "english" {
+                  english()
+              }
+              
+              if viewStore.from == "russian" {
+                  russian()
+              }
           }
         
 
