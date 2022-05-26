@@ -147,7 +147,7 @@ public let wordReducer = Reducer<
     
         
     case let .userNotifications(.openSettingsForNotification(notification)):
-        print(#line, notification)
+        debugPrint(#line, notification)
         return .none
 
     case let .userNotifications(.didReceiveResponse(response, completionHandler)):

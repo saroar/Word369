@@ -35,7 +35,7 @@ extension LanguageCode {
     public static let empty: LanguageCode = .init(name: "", nativeName: "", code: "")
     
   public static let list: [LanguageCode] = [
-    .init(name: "Bangla", nativeName: "বাংলা", code: "bd"),
+//    .init(name: "Bangla", nativeName: "বাংলা", code: "bd"),
     .init(name: "Russian", nativeName: "русский язык", code: "ru"),
     .init(name: "English", nativeName: "English", code: "us")
   ]

@@ -48,13 +48,13 @@ extension WordState {
         
       for word in words {
 
-        let fromDayStartHourToEndHours = (currentHourNext...endHour)
+          let fromDayStartHourToEndHours = UserDefaults.wordReminderCounters.map { $0.hour }
 
         if hourIndex == fromDayStartHourToEndHours.count {
           hourIndex = 0
           // when 1st day is finished
           // start 2nd dayHours from 0 -> how i can start 2nd day here
-            currentHourNext = startHour - 1 // set start hour from currentNextHour
+        currentHourNext = startHour - 1 // set start hour from currentNextHour
           
           currentDay += 1
     
@@ -99,7 +99,7 @@ extension WordState {
         for item in 0...totalNotifications - 1 {
             let word = words[item]
             
-            var fromDayStartHourToEndHours = (currentHourNext...endHour).map { $0 }
+            var fromDayStartHourToEndHours = UserDefaults.wordReminderCounters.map { $0.hour }
             // 1st day start from 9 to 20
             if hourIndex > fromDayStartHourToEndHours.count - 1 {
                 hourIndex = 0
@@ -117,7 +117,6 @@ extension WordState {
             dateComponents.calendar?.timeZone = .current
             dateComponents.hour = hour
             dateComponents.minute = 01
-            
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
             
@@ -191,4 +190,10 @@ extension WordState {
         return daysInYear
     }
     
+}
+
+extension UserDefaults {
+  // MARK: - WordReminders
+  @UserDefaultPublished(UserDefaultKeys.wordReminderCounters.rawValue, defaultValue: [])
+  public static var wordReminderCounters: [WordReminder]
 }

@@ -21,11 +21,13 @@ public struct WelcomeState: Equatable {
   
   @BindableState var selectedPage = WelcomeTag.l
   @BindableState var startHour = Calendar.current
-    .date(bySettingHour: 9, minute: 00, second: 0, of: Date())!
+    .date(bySettingHour: 8, minute: 00, second: 0, of: Date())!
   @BindableState var endHour = Calendar.current
     .date(bySettingHour: 20, minute: 00, second: 0, of: Date())!
-  
-  var wordReminderCounter: Int = 9
+    
+  var totalWordReminders: Int = 6
+  var alert: AlertState<WelcomeAction>?
+  @BindableState var wordReminderCounters: [WordReminder] = []
   @BindableState var name: String = ""
   @BindableState var isNameValid: Bool = false
   @BindableState var isBothLanguageEqual: Bool = true
@@ -51,6 +53,43 @@ extension WelcomeState {
   }
 }
 
+extension WelcomeState {
+    public func buildWordReminders(totalReminder: Int = 6) -> [WordReminder] {
+        var wrs: [WordReminder] = []
+
+        let start = self.startHour.hour
+        let end = self.endHour.hour
+        let arrayOfReminder = (start...end).map { $0 }
+        
+        let increseHour = arrayOfReminder.count / totalReminder
+
+        var schadualHours = [Int]()
+        let fisrtHour = arrayOfReminder[1] + increseHour
+        
+        for i in 0..<totalReminder {
+            if i == 0 {
+                schadualHours.append(arrayOfReminder[1])
+            } else {
+                schadualHours.append(fisrtHour + (i * increseHour))
+            }
+        }
+        
+        for (index, hour) in schadualHours.enumerated() {
+            let wr = WordReminder.init(
+                id: index + 1,
+                hour: hour,
+                date: Calendar.current
+                    .date(bySettingHour: hour, minute: 00, second: 0, of: Date())!
+            )
+            wrs.append(wr)
+        }
+        
+        // Save UserData
+        UserDefaults.wordReminderCounters = wrs
+        return wrs
+    }
+}
+
 public enum WelcomeAction: BindableAction, Equatable {
   case onApper
   case binding(BindingAction<WelcomeState>)
@@ -70,6 +109,8 @@ public enum WelcomeAction: BindableAction, Equatable {
   
   case currentSelectedLanguage(LanguageCode)
   case learnSelectedLanguage(LanguageCode)
+    
+  case alertDismissed
 }
 
 extension WelcomeAction {
@@ -153,7 +194,7 @@ extension WelcomeEnvironment {
 public let welcomeReducer = Reducer<
   WelcomeState, WelcomeAction, WelcomeEnvironment
 > { state, action, environment in
-  
+
   switch action {
     
   case .onApper:
@@ -168,10 +209,6 @@ public let welcomeReducer = Reducer<
         state.currentLngCode = UserDefaults.currentLanguage
       }
 
-    state.isBothLanguageEqual = state.currentLngCode == LanguageCode.english
-    state.isContinueButtonValid = state.isBothLanguageEqual
-      
-      
       if UserDefaults.learnLanguage.name.isEmpty {
           state.learnLangCode = LanguageCode.english
           UserDefaults.learnLanguage = LanguageCode.english
@@ -179,8 +216,11 @@ public let welcomeReducer = Reducer<
           state.learnLangCode = UserDefaults.learnLanguage
       }
     
+      state.isContinueButtonValid = state.isBothLanguageEqual
+      state.wordReminderCounters = state.buildWordReminders()
     
-    
+      state.isBothLanguageEqual = state.currentLngCode == LanguageCode.english
+      
     return .merge(
       environment.userDefaultsClient
         .setInteger(state.startHour.hour, UserDefaultKeys.startHour.rawValue)
@@ -190,7 +230,6 @@ public let welcomeReducer = Reducer<
         .setInteger(state.endHour.hour, UserDefaultKeys.endHour.rawValue)
         .fireAndForget()
     )
-    
     
   case .binding(\.$name):
     state.name = String(state.name.prefix(9))
@@ -232,18 +271,50 @@ public let welcomeReducer = Reducer<
     return .none
     
   case .incrementWordReminderButtonTapped:
-    state.wordReminderCounter += 1
-    return .none
+      if state.totalWordReminders <= 8 {
+          state.totalWordReminders += 1
+      } else {
+          state.alert = .init(
+            title: .init("Word Alert!"),
+            message: .init("Word Reminder cant be more then 9 times a day!"),
+            dismissButton: .cancel(.init("Cancel"), action: .send(.alertDismissed))
+          )
+      }
+      
+      state.wordReminderCounters = state.buildWordReminders(totalReminder: state.totalWordReminders)
+      
+    return environment.userDefaultsClient
+          .setInteger(state.totalWordReminders, UserDefaultKeys.totalWordReminders.rawValue)
+          .fireAndForget()
     
   case .decrementWordReminderButtonTapped:
-    state.wordReminderCounter -= 1
-    return .none
+      if state.totalWordReminders >= 4 {
+          state.totalWordReminders -= 1
+      } else {
+          state.alert = .init(
+            title: .init("Word Alert!"),
+            message: .init("Word Reminder cant be let then 3 times a day!"),
+            dismissButton: .cancel(.init("Cancel"), action: .send(.alertDismissed))
+          )
+      }
+      
+      state.wordReminderCounters = state.buildWordReminders(totalReminder: state.totalWordReminders)
+      
+    return environment.userDefaultsClient
+          .setInteger(state.totalWordReminders, UserDefaultKeys.totalWordReminders.rawValue)
+          .fireAndForget()
+      
+  case .binding(\.$wordReminderCounters):
+      print(state.wordReminderCounters)
+      return .none
     
   case .incrementStartHourButtonTapped:
     state.startHour = Calendar.current
       .date(byAdding: .hour, value: 1, to: state.startHour)!
     
     let startHour = Calendar.current.component(.hour, from: state.startHour)
+    
+    state.wordReminderCounters = state.buildWordReminders(totalReminder: state.totalWordReminders)
     
     return environment.userDefaultsClient
       .setInteger(startHour, UserDefaultKeys.startHour.rawValue)
@@ -254,6 +325,7 @@ public let welcomeReducer = Reducer<
       .date(byAdding: .hour, value: -1, to: state.startHour)!
     
     let startHour = Calendar.current.component(.hour, from: state.startHour)
+    state.wordReminderCounters = state.buildWordReminders(totalReminder: state.totalWordReminders)
     
     return environment.userDefaultsClient
       .setInteger(startHour, UserDefaultKeys.startHour.rawValue)
@@ -264,6 +336,7 @@ public let welcomeReducer = Reducer<
       .date(byAdding: .hour, value: 1, to: state.endHour)!
     let endHour = Calendar.current.component(.hour, from: state.endHour)
     
+    state.wordReminderCounters = state.buildWordReminders(totalReminder: state.totalWordReminders)
     return environment.userDefaultsClient
       .setInteger(endHour, UserDefaultKeys.endHour.rawValue)
       .fireAndForget()
@@ -273,6 +346,9 @@ public let welcomeReducer = Reducer<
       .date(byAdding: .hour, value: -1, to: state.endHour)!
     
     let endHour = Calendar.current.component(.hour, from: state.endHour)
+      
+    state.wordReminderCounters = state.buildWordReminders(totalReminder: state.totalWordReminders)
+    
     return environment.userDefaultsClient
       .setInteger(endHour, UserDefaultKeys.endHour.rawValue)
       .fireAndForget()
@@ -292,7 +368,9 @@ public let welcomeReducer = Reducer<
     state.isContinueButtonValid = state.isBothLanguageEqual
     
     return .none
-
+  case .alertDismissed:
+      state.alert = nil
+      return .none
   }
 }
 .binding()
@@ -307,7 +385,7 @@ struct WelcomeView: View {
     @BindableState var startHour: Date
     @BindableState var endHour: Date
     
-    var wordReminderCounter: Int
+    var totalWordReminders: Int
     @BindableState var name: String
     @BindableState var isNameValid: Bool
     
@@ -320,7 +398,7 @@ struct WelcomeView: View {
       self.selectedPage = state.selectedPage
       self.startHour = state.startHour
       self.endHour = state.endHour
-      self.wordReminderCounter = state.wordReminderCounter
+      self.totalWordReminders = state.totalWordReminders
       self.name = state.name
       self.isNameValid = state.isNameValid
       self.currentLngCode = state.currentLngCode
@@ -394,7 +472,11 @@ struct WelcomeView: View {
 //      store: Store(
 //        initialState: WelcomeState(),
 //        reducer: welcomeReducer,
-//        environment: WelcomeEnvironment())
+//        environment: WelcomeEnvironment(
+//            userNotificationClient: .live,
+//            userDefaultsClient: .live(),
+//            mainQueue: .immediate,
+//            backgroundQueue: .immediate))
 //    )
 //  }
 //}
@@ -410,10 +492,11 @@ struct WelcomeViewA: View {
   var body: some View {
     WithViewStore(self.store) { viewStore in
       VStack {
-        Image(systemName: "pencil")
-          .resizable()
-          .scaledToFit()
-          .padding(40)
+        Image(systemName: "person.text.rectangle")
+              .resizable()
+              .scaledToFit()
+              .frame(height: 200)
+              .padding(.bottom, 20)
         
         HStack {
           Image(systemName: "person")
@@ -421,6 +504,7 @@ struct WelcomeViewA: View {
             .scaledToFit()
             .frame(width: 40, height: 40, alignment: .leading)
             .padding()
+            
           Text("Enter your name please!").font(.title)
             .frame(minWidth: 0, maxWidth: .infinity, alignment: .leading)
           
@@ -436,6 +520,21 @@ struct WelcomeViewA: View {
   }
 }
 
+//struct WelcomeViewA_Previews: PreviewProvider {
+//  static var previews: some View {
+//    WelcomeViewA(
+//      store: Store(
+//        initialState: WelcomeState(),
+//        reducer: welcomeReducer,
+//        environment: WelcomeEnvironment(
+//            userNotificationClient: .live,
+//            userDefaultsClient: .live(),
+//            mainQueue: .immediate,
+//            backgroundQueue: .immediate))
+//    )
+//  }
+//}
+
 struct WelcomeViewB: View {
   
   let store: Store<WelcomeState, WelcomeAction>
@@ -446,14 +545,14 @@ struct WelcomeViewB: View {
   
   var body: some View {
     WithViewStore(self.store) { viewStore in
-      VStack {
+      ScrollView {
         Image(systemName: "timelapse")
-          .resizable()
-          .scaledToFit()
-          .padding(.top, 16)
+              .resizable()
+                  .scaledToFit()
+                  .frame(width: 250, height: 250)
         
-        Text("\(viewStore.name) set your Words reminders")
-          .font(.largeTitle)
+        Text("\(viewStore.name) set your words reminders")
+          .font(.title)
           .layoutPriority(1)
           .lineLimit(nil)
           .multilineTextAlignment(.center)
@@ -470,7 +569,7 @@ struct WelcomeViewB: View {
               Image(systemName: "minus.square").font(.largeTitle)
             }
             
-            Text("\(viewStore.state.wordReminderCounter)x")
+            Text("\(viewStore.state.totalWordReminders)x")
               .font(.title)
               .lineLimit(nil)
               .multilineTextAlignment(.center)
@@ -493,78 +592,96 @@ struct WelcomeViewB: View {
         .background(Color.orange)
         .clipShape(Capsule())
         .padding(.horizontal)
-        
-        HStack {
-          VStack {
-            
-            Button { viewStore.send(.incrementStartHourButtonTapped) } label: {
-              Image(systemName: "plus").font(.title)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, maxHeight: 30)
-            }
-            .padding()
-            .background(Color(red: 0, green: 0, blue: 0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 5))
-            
-            DatePicker(
-              LocalizedStringKey("Start Hour"),
-              selection: viewStore.binding(\.$startHour),
-              displayedComponents: [.hourAndMinute])
-            
-            Button { viewStore.send(.decrementStartHourButtonTapped) } label: {
-              Image(systemName: "minus").font(.title)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, maxHeight: 30)
-            }
-            .padding()
-            .background(Color(red: 0, green: 0, blue: 0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 5))
-            .frame(maxWidth: .infinity)
-            
-          }
+
+          Divider()
           
           HStack {
-            Divider()
-          }
-          .frame(height: 200)
-          
-          VStack {
-            
-            Button {
-              viewStore.send(.incrementEndHourButtonTapped)
-            } label: {
-              Image(systemName: "plus").font(.title)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, maxHeight: 30)
+            VStack {
+              
+              Button { viewStore.send(.incrementStartHourButtonTapped) } label: {
+                Image(systemName: "plus").font(.title)
+                  .foregroundColor(.white)
+                  .frame(maxWidth: .infinity, maxHeight: 30)
+              }
+              .padding()
+              .background(Color(red: 0, green: 0, blue: 0.5))
+              .clipShape(RoundedRectangle(cornerRadius: 5))
+              
+              DatePicker(
+                LocalizedStringKey("Start Hour"),
+                selection: viewStore.binding(\.$startHour),
+                displayedComponents: [.hourAndMinute])
+              
+              Button { viewStore.send(.decrementStartHourButtonTapped) } label: {
+                Image(systemName: "minus").font(.title)
+                  .foregroundColor(.white)
+                  .frame(maxWidth: .infinity, maxHeight: 30)
+              }
+              .padding()
+              .background(Color(red: 0, green: 0, blue: 0.5))
+              .clipShape(RoundedRectangle(cornerRadius: 5))
+              .frame(maxWidth: .infinity)
+              
             }
-            .padding()
-            .background(Color(red: 0, green: 0, blue: 0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 5))
             
-            DatePicker(
-              LocalizedStringKey("End Hour"),
-              selection: viewStore.binding(\.$endHour),
-              displayedComponents: [.hourAndMinute])
-            
-            Button {
-              viewStore.send(.decrementEndHourButtonTapped)
-            } label: {
-              Image(systemName: "minus").font(.title)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity, maxHeight: 30)
+            HStack {
+              Divider()
             }
-            .padding()
-            .background(Color(red: 0, green: 0, blue: 0.5))
-            .clipShape(RoundedRectangle(cornerRadius: 5))
-            .frame(maxWidth: .infinity)
+            .frame(height: 200)
+            
+            VStack {
+              
+              Button {
+                viewStore.send(.incrementEndHourButtonTapped)
+              } label: {
+                Image(systemName: "plus").font(.title)
+                  .foregroundColor(.white)
+                  .frame(maxWidth: .infinity, maxHeight: 30)
+              }
+              .padding()
+              .background(Color(red: 0, green: 0, blue: 0.5))
+              .clipShape(RoundedRectangle(cornerRadius: 5))
+              
+              DatePicker(
+                LocalizedStringKey("End Hour"),
+                selection: viewStore.binding(\.$endHour),
+                displayedComponents: [.hourAndMinute])
+              
+              Button {
+                viewStore.send(.decrementEndHourButtonTapped)
+              } label: {
+                Image(systemName: "minus").font(.title)
+                  .foregroundColor(.white)
+                  .frame(maxWidth: .infinity, maxHeight: 30)
+              }
+              .padding()
+              .background(Color(red: 0, green: 0, blue: 0.5))
+            }
           }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal)
-        .padding(.bottom, 100)
-        
+          .padding(.horizontal)
       }
+      .padding(.bottom, 90)
+      .alert(
+        self.store.scope(state: \.alert),
+        dismiss: .alertDismissed
+      )
     }
+  }
+}
+
+struct WelcomeViewB_Previews: PreviewProvider {
+  static var previews: some View {
+    WelcomeViewB(
+      store: Store(
+        initialState: WelcomeState(),
+        reducer: welcomeReducer,
+        environment: WelcomeEnvironment(
+            userNotificationClient: .live,
+            userDefaultsClient: .live(),
+            mainQueue: .immediate,
+            backgroundQueue: .immediate)
+      )
+    )
   }
 }
 
@@ -591,7 +708,6 @@ struct WelcomeViewC: View {
   }
 }
 
-
 struct WelcomeViewL: View {
   
   let store: Store<WelcomeState, WelcomeAction>
@@ -614,8 +730,12 @@ struct WelcomeViewL: View {
   var body: some View {
     
     WithViewStore(self.store) { viewStore in
-      
       VStack {
+          Image(systemName: "abc")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 250, height: 200)
+          
         Text("Language choice").font(.largeTitle).bold()
           .padding()
 
@@ -662,8 +782,9 @@ struct WelcomeViewL: View {
           }
         })
         
+          Spacer()
       }
-      .padding()
+      .padding(16)
     }
     
   }
@@ -677,4 +798,7 @@ extension UserDefaults {
 
   @UserDefaultPublished(UserDefaultKeys.learnLanguage.rawValue, defaultValue: LanguageCode.empty)
   public static var learnLanguage: LanguageCode
+    
+  @UserDefaultPublished(UserDefaultKeys.wordReminderCounters.rawValue, defaultValue: [])
+  public static var wordReminderCounters: [WordReminder]
 }
